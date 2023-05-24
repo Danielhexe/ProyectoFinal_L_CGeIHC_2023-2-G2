@@ -31,11 +31,6 @@ Desarrollo del proyecto final de computación gráfica
 const float toRadians = 3.14159265f / 180.0f;
 
 //variables para animación
-float movCoche;
-float movOffset;
-float rotllanta;
-float rotllantaOffset;
-bool avanza;
 float toffsetu = 0.0f;
 float toffsetv = 0.0f;
 float reproduciranimacion, habilitaranimacion,
@@ -48,18 +43,9 @@ std::vector<Shader> shaderList;
 
 Camera camera;
 
-Texture brickTexture;
-Texture dirtTexture;
-Texture plainTexture;
 Texture pisoTexture;
 Texture AgaveTexture;
 Texture FlechaTexture;
-
-Model Kitt_M;
-Model Llanta_M;
-Model Camino_M;
-Model Blackhawk_M;
-Model Dado_M;
 
 Skybox skybox;
 
@@ -87,7 +73,6 @@ static const char* fShader = "shaders/shader_light.frag";
 
 //PARA INPUT CON KEYFRAMES 
 void inputKeyframes(bool* keys);
-
 
 //cálculo del promedio de las normales para sombreado de Phong
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
@@ -168,7 +153,6 @@ void CreateObjects()
 
 	};
 	
-
 	unsigned int flechaIndices[] = {
 	   0, 1, 2,
 	   0, 2, 3,
@@ -214,16 +198,11 @@ void CreateShaders()
 }
 
 ///////////////////////////////KEYFRAMES/////////////////////
-
-
 bool animacion = false;
-
-
 //NEW// Keyframes
 float posXavion = 2.0, posYavion = 5.0, posZavion = -3.0; //Estado inicial
 float	movAvion_x = 0.0f, movAvion_y = 0.0f;
 float giroAvion = 0;
-
 #define MAX_FRAMES 30
 int i_max_steps = 350;		//Fluides de la animación, más grande, mas fluido =! consume más recuros //Default 90
 int i_curr_steps = 5;
@@ -275,7 +254,6 @@ void interpolation(void)
 
 }
 
-
 void animate(void)
 {
 	//Movimiento del objeto
@@ -314,12 +292,6 @@ void animate(void)
 	}
 }
 
-/* FIN KEYFRAMES*/
-
-
-
-
-
 int main()
 {
 	mainWindow = Window(1366, 768); // 1280, 1024 or 1024, 768
@@ -330,29 +302,15 @@ int main()
 
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.5f, 0.5f);
 
-	brickTexture = Texture("Textures/brick.png");
-	brickTexture.LoadTextureA();
-	dirtTexture = Texture("Textures/dirt.png");
-	dirtTexture.LoadTextureA();
-	plainTexture = Texture("Textures/plain.png");
-	plainTexture.LoadTextureA();
 	pisoTexture = Texture("Textures/AldeaHoja.tga");
 	pisoTexture.LoadTextureA();
 	AgaveTexture = Texture("Textures/Agave.tga");
 	AgaveTexture.LoadTextureA();
 	FlechaTexture = Texture("Textures/flechas.tga");
 	FlechaTexture.LoadTextureA();
-	Kitt_M = Model();
-	Kitt_M.LoadModel("Models/kitt.obj");
-	Llanta_M = Model();
-	Llanta_M.LoadModel("Models/k_rueda.3ds");
-	Blackhawk_M = Model();
-	Blackhawk_M.LoadModel("Models/uh60.obj");
-	Camino_M = Model();
-	Camino_M.LoadModel("Models/railroad track.obj");
 
 
-	//Este es para colocar el fondo de todo el proyecto
+	/* Aquí es para colocar el fondo de todo el proyecto además de colocar el día y la noche todo se carga*/
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
@@ -387,7 +345,7 @@ int main()
 		0.0f, 0.0f, 0.0f,
 		0.0f, -1.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
-		5.0f);
+		15.0f);
 	spotLightCount++;
 
 	//luz fija
@@ -407,29 +365,19 @@ int main()
 	GLuint uniformColor = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	
-	movCoche = 0.0f;
-	movOffset = 0.01f;
-	rotllanta = 0.0f;
-	rotllantaOffset = 5.0f;
-	avanza = true;
-
 	glm::vec3 posblackhawk = glm::vec3(2.0f, 0.0f, 0.0f);
 	//KEYFRAMES DECLARADOS INICIALES
-
 	KeyFrame[0].movAvion_x = 0.0f;
 	KeyFrame[0].movAvion_y = 0.0f;
 	KeyFrame[0].giroAvion = 0;
-
 
 	KeyFrame[1].movAvion_x = 1.0f;
 	KeyFrame[1].movAvion_y = 2.0f;
 	KeyFrame[1].giroAvion = 0;
 
-
 	KeyFrame[2].movAvion_x = 2.0f;
 	KeyFrame[2].movAvion_y = 0.0f;
 	KeyFrame[2].giroAvion = 0;
-
 
 	KeyFrame[3].movAvion_x = 3.0f;
 	KeyFrame[3].movAvion_y = -2.0f;
@@ -455,38 +403,7 @@ int main()
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
 
-		if(avanza)
-		{
-			if (movCoche < 301.0f)
-			{
-				movCoche -= movOffset * deltaTime;
-				//printf("avanza%f \n ",movCoche);
-
-			}
-			if (movCoche < -300.0f)
-			{
-				avanza = false;
-			}
-		}
-		else
-		{
-			if (movCoche < 300.0f)
-			{
-				movCoche += movOffset * deltaTime;
-
-			}
-			else
-			{
-				//printf("entro");
-				avanza = true;
-			}
-
-		}
-
-
-		rotllanta += rotllantaOffset * deltaTime;
-
-
+		
 		//Recibir eventos del usuario
 		glfwPollEvents();
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
@@ -528,7 +445,7 @@ int main()
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
 
-
+		/* Se declaran algunas matrices auxiliares*/
 		glm::mat4 model(1.0);
 		glm::mat4 modelaux(1.0);
 		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -541,65 +458,12 @@ int main()
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		pisoTexture.UseTexture();
-		//Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-
 		meshList[2]->RenderMesh();
 
-
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(movCoche, 0.5f, -1.5f));
-		modelaux = model;
-		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Kitt_M.RenderModel();
-		model = modelaux;
-		model = glm::translate(model, glm::vec3(-1.0, -0.1f, 0.2f));
-		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.07f));
-		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, rotllanta * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		//Llanta_M.RenderModel();
-
-
-		//model = glm::mat4(1.0);
-		//model = glm::translate(model, glm::vec3(0.0f+3*movCoche, 3.0f + 0.33*sin(glm::radians(rotllanta)), -1.0 ));
-		//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		//model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-		//model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
-
-		//Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		////color = glm::vec3(0.0f, 1.0f, 0.0f);
-		////glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		//Blackhawk_M.RenderModel();
-
-		model = glm::mat4(1.0);
-		posblackhawk = glm::vec3(posXavion + movAvion_x, posYavion + movAvion_y, posZavion);
-		model = glm::translate(model, posblackhawk);
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		model = glm::rotate(model, giroAvion * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		Blackhawk_M.RenderModel();
-
-
-		//color = glm::vec3(1.0f, 1.0f, 1.0f);
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, -1.53f, 0.0f));
-		model = glm::scale(model, glm::vec3(25.0f, 1.0f, 2.0f));
-
-		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Camino_M.RenderModel();
-
-		//Agave ¿qué sucede si lo renderizan antes del coche y de la pista?
+		//			AGAVE ¿qué sucede si lo renderizan antes del coche y de la pista?
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, 0.5f, -2.0f));
-		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		//blending: transparencia o traslucidez
 		glEnable(GL_BLEND);
@@ -609,7 +473,7 @@ int main()
 		meshList[3]->RenderMesh();
 		
 
-		//textura con movimiento
+		/* ------------------------- Textura con movimiento------------------------*/
 		//Importantes porque la variable uniform no podemos modificarla directamente
 		toffsetu += 0.001;
 		toffsetv += 0.001;
@@ -621,14 +485,12 @@ int main()
 		//printf("\ntfosset %f \n", toffsetu);
 		//pasar a la variable uniform el valor actualizado
 		toffset = glm::vec2(toffsetu, toffsetv);
-
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, 0.2f, -6.0f));
 		model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		
 		FlechaTexture.UseTexture();
 		//Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[4]->RenderMesh();
