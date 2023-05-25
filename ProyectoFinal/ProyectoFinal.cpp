@@ -47,7 +47,7 @@ Texture pisoTexture;
 Texture AgaveTexture;
 Texture FlechaTexture;
 
-Skybox skybox;
+Skybox skyboxDia;
 
 //materiales
 Material Material_brillante;
@@ -312,18 +312,17 @@ int main()
 
 	/* Aquí es para colocar el fondo de todo el proyecto además de colocar el día y la noche todo se carga*/
 	std::vector<std::string> skyboxFaces;
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_dn.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_up.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_bk.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_ft.tga");
+	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_RT.tga");			//Right
+	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_LT.tga");			//Left
+ 	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_DT.tga");			//Down
+	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_UT.tga");			//Up
+	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_BT.tga");			//Back				//CA	
+	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_FT.tga");			//Front	256x256		
 
-	skybox = Skybox(skyboxFaces);
+	skyboxDia = Skybox(skyboxFaces);
 
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
-
 
 	//luz direccional, sólo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
@@ -417,7 +416,7 @@ int main()
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
+		skyboxDia.DrawSkybox(camera.calculateViewMatrix(), projection);			//Se dibujan el cielo 
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();
 		uniformProjection = shaderList[0].GetProjectionLocation();
