@@ -310,7 +310,7 @@ int main()
 	LavaT.LoadTextureA();
 	/*---------------------------- MODELOS -----------------------------------*/
 	silla = Model();
-	silla.LoadModel("TexturasSinEditarDescargadas/ModeloSillaTextura/SillaTextura.obj");
+	silla.LoadModel("Models/sillaRestaurante.obj");
 	DeathStar = Model();
 	DeathStar.LoadModel("Models/DeathStar.obj");
 	Kunai = Model();
@@ -508,13 +508,12 @@ int main()
 		meshList[3]->RenderMesh();
 
 		/*-----------------Esfera simula la bijudama ------------*/  //Bibudama de fuego
-		color = glm::vec3(0.1961f, 0.8902f, 0.8196f);
+		//color = glm::vec3(0.1961f, 0.8902f, 0.8196f);
 		model = glm::translate(model, glm::vec3(0.4f, 25.0f, -6.0f));
 		model = glm::scale(model, glm::vec3(5.0f, 5.0f,5.0f));
-		//model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		glUniformMatrix4fv(uniformTextureOffset, 1, GL_FALSE, glm::value_ptr(toffset));
 		LavaT.UseTexture();
 		sp.render();
 
@@ -522,7 +521,6 @@ int main()
  		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, 3.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-		model = glm::rotate(model, 0 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		silla.RenderModel();
 		
