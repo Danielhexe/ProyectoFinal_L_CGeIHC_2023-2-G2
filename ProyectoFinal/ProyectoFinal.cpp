@@ -53,6 +53,10 @@ Skybox skyboxDia;
 
 Model silla;
 Model DeathStar;
+Model Kunai;
+Model Kama;
+Model Kubikiribocho;
+Model Shuriken4Dagas;
 
 //materiales
 Material Material_brillante;
@@ -315,10 +319,20 @@ int main()
 	FlechaTexture.LoadTextureA();
 
 
+	/*---------------------------- MODELOS -----------------------------------*/
 	silla = Model();
 	silla.LoadModel("TexturasSinEditarDescargadas/ModeloSillaTextura/SillaTextura.obj");
 	DeathStar = Model();
 	DeathStar.LoadModel("Models/DeathStar.obj");
+	Kunai = Model();
+	Kunai.LoadModel("Models/Kunai.obj");
+	Kama = Model();
+	Kama.LoadModel("Models/KAma.obj");
+	Kubikiribocho = Model();
+	Kubikiribocho.LoadModel("Models/Kubikiribocho.obj");
+	Shuriken4Dagas = Model();
+	Shuriken4Dagas.LoadModel("Models/Shuriken4Dagas.obj");
+
 
 	horario = 0.0f;
 
@@ -512,20 +526,40 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		silla.RenderModel();*/
 		
+		/*------------------ DEATHSTAR ------------------------------*/
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(8.0f, 14.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		DeathStar.RenderModel();
 
+		/*--------------------- KUNAI ---------------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-8.0f, 8.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Kunai.RenderModel();
 
+		/*----------------------- Kama --------------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(28.0f, 8.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Kama.RenderModel();
 
+		/*----------------------- Kubikiri ----------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-18.0f, 8.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Kubikiribocho.RenderModel();
 
-
-
-
-
-
+		/*-------------------------- Shuriken --------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-22.0f, 8.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Shuriken4Dagas.RenderModel();
 
 
 
