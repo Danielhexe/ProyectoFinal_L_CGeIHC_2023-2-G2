@@ -30,6 +30,8 @@ Desarrollo del proyecto final de computación gráfica
 #include "Material.h"
 const float toRadians = 3.14159265f / 180.0f;
 
+float horario;
+
 //variables para animación
 float toffsetu = 0.0f;
 float toffsetv = 0.0f;
@@ -46,6 +48,7 @@ Texture pisoTexture;
 Texture AgaveTexture;
 Texture FlechaTexture;
 
+Skybox skyboxNoche;
 Skybox skyboxDia;
 
 Model silla;
@@ -314,6 +317,8 @@ int main()
 	silla = Model();
 	silla.LoadModel("TexturasSinEditarDescargadas/ModeloSillaTextura/SillaTextura.obj");
 
+	horario = 0.0f;
+
 	/* Aquí es para colocar el fondo de todo el proyecto además de colocar el día y la noche todo se carga*/
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_RT.tga");			//Right
@@ -322,8 +327,20 @@ int main()
 	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_UT.tga");			//Up
 	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_BT.tga");			//Back				//CA	
 	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_FT.tga");			//Front	256x256		
+	skyboxNoche = Skybox(skyboxFaces);
 
-	skyboxDia = Skybox(skyboxFaces);
+
+	//Se coloca el siguiente horario
+	std::vector<std::string> skyboxFacesDia;
+	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_rt.tga");
+	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_lf.tga");
+	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_dn.tga");
+	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_up.tga");
+	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_bk.tga");
+	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_ft.tga");
+	skyboxDia = Skybox(skyboxFacesDia);
+
+
 
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
@@ -405,22 +422,31 @@ int main()
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
-
-		
 		//Recibir eventos del usuario
 		glfwPollEvents();
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
-
 		//para keyframes
 		inputKeyframes(mainWindow.getsKeys());
 		animate();
-
-
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		skyboxDia.DrawSkybox(camera.calculateViewMatrix(), projection);			//Se dibujan el cielo 
+		/* Este ciclo es el encargado de dar el día y la noche en el escenario*/
+		if (horario <= 5.0f) {			//Se ve la noche
+			skyboxNoche.DrawSkybox(camera.calculateViewMatrix(), projection);			//Se dibuja el cielo
+			horario += 0.001f;
+		}
+		else {
+			skyboxDia.DrawSkybox(camera.calculateViewMatrix(), projection);
+			if (horario > 10.0f && horario > 10.5f) {
+				horario = 0.0f;
+			}
+			horario += 0.001f;
+		}
+		printf("horario -> %f\n",horario);
+		
+		
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();
 		uniformProjection = shaderList[0].GetProjectionLocation();
@@ -475,7 +501,7 @@ int main()
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[3]->RenderMesh();
 
-		/*/* Se prueba cargar la silla 
+		/* Se prueba cargar la silla 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, 3.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
@@ -483,6 +509,20 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		silla.RenderModel();*/
 		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		/* ------------------------- Textura con movimiento------------------------*/
 		//Importantes porque la variable uniform no podemos modificarla directamente
@@ -507,10 +547,6 @@ int main()
 		meshList[4]->RenderMesh();
 		glDisable(GL_BLEND);
 		
-		
-
-
-
 		glUseProgram(0);
 
 		mainWindow.swapBuffers();
