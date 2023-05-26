@@ -31,7 +31,6 @@ Desarrollo del proyecto final de computación gráfica
 const float toRadians = 3.14159265f / 180.0f;
 
 float horario;
-
 //variables para animación
 float toffsetu = 0.0f;
 float toffsetv = 0.0f;
@@ -43,7 +42,10 @@ Window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
 
+Sphere sp = Sphere(1.0, 20, 20);		//Creacion de bijudamas
+
 Camera camera;
+Texture LavaT;
 Texture pisoTexture;
 Texture AgaveTexture;
 Texture FlechaTexture;
@@ -73,16 +75,12 @@ DirectionalLight mainLight;
 //para declarar varias luces de tipo pointlight
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
-
 // Vertex Shader
 static const char* vShader = "shaders/shader_light.vert";
-
 // Fragment Shader
 static const char* fShader = "shaders/shader_light.frag";
-
 //PARA INPUT CON KEYFRAMES 
 void inputKeyframes(bool* keys);
-
 //cálculo del promedio de las normales para sombreado de Phong
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
 	unsigned int vLength, unsigned int normalOffset)
@@ -111,7 +109,6 @@ void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat
 		vertices[nOffset] = vec.x; vertices[nOffset + 1] = vec.y; vertices[nOffset + 2] = vec.z;
 	}
 }
-
 
 void CreateObjects()
 {
@@ -197,15 +194,12 @@ void CreateObjects()
 	meshList.push_back(obj5);
 
 }
-
-
 void CreateShaders()
 {
 	Shader *shader1 = new Shader();
 	shader1->CreateFromFiles(vShader, fShader);
 	shaderList.push_back(*shader1);
 }
-
 ///////////////////////////////KEYFRAMES/////////////////////
 bool animacion = false;
 //NEW// Keyframes
@@ -246,7 +240,6 @@ void saveFrame(void)
 	printf("KeyFrame[%d].movAvion_x = %f;\n",FrameIndex,movAvion_x);
 	FrameIndex++;
 }
-
 void resetElements(void)
 {
 
@@ -254,7 +247,6 @@ void resetElements(void)
 	movAvion_y = KeyFrame[0].movAvion_y;
 	giroAvion = KeyFrame[0].giroAvion;
 }
-
 void interpolation(void)
 {
 	KeyFrame[playIndex].movAvion_xInc = (KeyFrame[playIndex + 1].movAvion_x - KeyFrame[playIndex].movAvion_x) / i_max_steps;
@@ -262,7 +254,6 @@ void interpolation(void)
 	KeyFrame[playIndex].giroAvionInc = (KeyFrame[playIndex + 1].giroAvion - KeyFrame[playIndex].giroAvion) / i_max_steps;
 
 }
-
 void animate(void)
 {
 	//Movimiento del objeto
@@ -305,20 +296,18 @@ int main()
 {
 	mainWindow = Window(1366, 768); // 1280, 1024 or 1024, 768
 	mainWindow.Initialise();
-
 	CreateObjects();
 	CreateShaders();
-
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.5f, 0.5f);
-
+	/* ----------------- Texturas -------------------*/
 	pisoTexture = Texture("Textures/AldeaHoja.tga");
 	pisoTexture.LoadTextureA();
 	AgaveTexture = Texture("Textures/Agave.tga");
 	AgaveTexture.LoadTextureA();
 	FlechaTexture = Texture("Textures/flechas.tga");
 	FlechaTexture.LoadTextureA();
-
-
+	LavaT = Texture("Textures/lava2TGA.tga");
+	LavaT.LoadTextureA();
 	/*---------------------------- MODELOS -----------------------------------*/
 	silla = Model();
 	silla.LoadModel("TexturasSinEditarDescargadas/ModeloSillaTextura/SillaTextura.obj");
@@ -334,6 +323,7 @@ int main()
 	Shuriken4Dagas.LoadModel("Models/Shuriken4Dagas.obj");
 
 
+	/* Variable a utilizar */
 	horario = 0.0f;
 
 	/* Aquí es para colocar el fondo de todo el proyecto además de colocar el día y la noche todo se carga*/
@@ -346,7 +336,6 @@ int main()
 	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_FT.tga");			//Front	256x256		
 	skyboxNoche = Skybox(skyboxFaces);
 
-
 	//Se coloca el siguiente horario
 	std::vector<std::string> skyboxFacesDia;
 	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_rt.tga");
@@ -356,8 +345,6 @@ int main()
 	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_bk.tga");
 	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_ft.tga");
 	skyboxDia = Skybox(skyboxFacesDia);
-
-
 
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
@@ -429,7 +416,9 @@ int main()
 
 
 
-
+	//Para cargar esferas esto funcionaría como las primitivas geométricas
+	sp.init(); //inicializar esfera
+	sp.load();//enviar la esfera al shader
 
 	
 	////Loop mientras no se cierra la ventana
@@ -461,9 +450,7 @@ int main()
 			}
 			horario += 0.001f;
 		}
-		printf("horario -> %f\n",horario);
-		
-		
+				
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();
 		uniformProjection = shaderList[0].GetProjectionLocation();
@@ -497,16 +484,18 @@ int main()
 		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 		glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
 
+
+		/*---------------------  Piso  --------------------*/
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(30.0f, 1.0f, 30.0f));
+		model = glm::scale(model, glm::vec3(30.0f, 1.0f, 70.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		pisoTexture.UseTexture();
 		meshList[2]->RenderMesh();
 
-		//			AGAVE ¿qué sucede si lo renderizan antes del coche y de la pista?
+		//AGAVE ¿qué sucede si lo renderizan antes del coche y de la pista?
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, 0.5f, -2.0f));
 		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
@@ -518,13 +507,24 @@ int main()
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[3]->RenderMesh();
 
-		/* Se prueba cargar la silla 
-		model = glm::mat4(1.0);
+		/*-----------------Esfera simula la bijudama ------------*/  //Bibudama de fuego
+		color = glm::vec3(0.1961f, 0.8902f, 0.8196f);
+		model = glm::translate(model, glm::vec3(0.4f, 25.0f, -6.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f,5.0f));
+		//model = glm::rotate(model, glm::radians(mainWindow.getrotax()), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		LavaT.UseTexture();
+		sp.render();
+
+		/* ------------------ Silla para el restaurante   */
+ 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, 3.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 		model = glm::rotate(model, 0 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		silla.RenderModel();*/
+		silla.RenderModel();
 		
 		/*------------------ DEATHSTAR ------------------------------*/
 		model = glm::mat4(1.0);
@@ -560,6 +560,15 @@ int main()
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Shuriken4Dagas.RenderModel();
+
+
+
+
+
+
+
+
+
 
 
 
