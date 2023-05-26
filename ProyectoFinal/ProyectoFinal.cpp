@@ -52,6 +52,7 @@ Skybox skyboxNoche;
 Skybox skyboxDia;
 
 Model silla;
+Model DeathStar;
 
 //materiales
 Material Material_brillante;
@@ -316,6 +317,8 @@ int main()
 
 	silla = Model();
 	silla.LoadModel("TexturasSinEditarDescargadas/ModeloSillaTextura/SillaTextura.obj");
+	DeathStar = Model();
+	DeathStar.LoadModel("Models/DeathStar.obj");
 
 	horario = 0.0f;
 
@@ -509,6 +512,11 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		silla.RenderModel();*/
 		
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(8.0f, 14.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		DeathStar.RenderModel();
 
 
 
