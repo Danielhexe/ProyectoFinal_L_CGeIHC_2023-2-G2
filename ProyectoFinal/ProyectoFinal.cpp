@@ -42,12 +42,13 @@ std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
 
 Camera camera;
-
 Texture pisoTexture;
 Texture AgaveTexture;
 Texture FlechaTexture;
 
 Skybox skyboxDia;
+
+Model silla;
 
 //materiales
 Material Material_brillante;
@@ -310,6 +311,9 @@ int main()
 	FlechaTexture.LoadTextureA();
 
 
+	silla = Model();
+	silla.LoadModel("TexturasSinEditarDescargadas/ModeloSillaTextura/SillaTextura.obj");
+
 	/* Aquí es para colocar el fondo de todo el proyecto además de colocar el día y la noche todo se carga*/
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_RT.tga");			//Right
@@ -470,6 +474,14 @@ int main()
 		AgaveTexture.UseTexture();
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[3]->RenderMesh();
+
+		/* Se prueba cargar la silla */
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 3.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::rotate(model, 0 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla.RenderModel();
 		
 
 		/* ------------------------- Textura con movimiento------------------------*/
