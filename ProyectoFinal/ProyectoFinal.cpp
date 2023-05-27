@@ -579,7 +579,7 @@ int main()
 
 		/* --------------------- Restaurante ----------------------------*/
 		model = glm::mat4(1.0);				//:vec3(-22.0f, 28.0f, 15.0f)
-		model = glm::translate(model, glm::vec3(120.0f, -4.0f, 200.0f));
+		model = glm::translate(model, glm::vec3(120.0f, -10.0f, 200.0f));
 		model = glm::scale(model, glm::vec3(22.0f, 25.0f, 50.0f));
 		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
