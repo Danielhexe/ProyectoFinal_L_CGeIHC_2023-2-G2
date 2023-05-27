@@ -30,6 +30,7 @@ Desarrollo del proyecto final de computación gráfica
 #include "Material.h"
 const float toRadians = 3.14159265f / 180.0f;
 
+//Horario
 float horario;
 //variables para animación
 float toffsetu = 0.0f;
@@ -37,6 +38,8 @@ float toffsetv = 0.0f;
 float reproduciranimacion, habilitaranimacion,
 guardoFrame, reinicioFrame, ciclo, ciclo2, contador = 0;
 
+//Animación básica
+float vueloSnitch;
 
 Window mainWindow;
 std::vector<Mesh*> meshList;
@@ -65,6 +68,14 @@ Model Naruto;
 Model TrebolC;
 Model Mesa;
 Model Katana;
+Model Gargantua;
+
+//Snithc
+Model Snitch;
+Model SnitchAlaI;
+Model SnitchAlaD;
+
+
 
 //materiales
 Material Material_brillante;
@@ -339,6 +350,17 @@ int main()
 	Mesa.LoadModel("Models/MESA.obj");
 	Katana = Model();
 	Katana.LoadModel("Models/KAtana.obj");
+	Gargantua = Model();
+	Gargantua.LoadModel("Models/gargantua.obj");
+	
+	//Snitch jerarquía
+	Snitch = Model();
+	Snitch.LoadModel("Models/snitchOBJ.obj"); //El centro de la snitch
+	SnitchAlaI = Model();
+	SnitchAlaI.LoadModel("Models/snitchAlaI.obj"); //El centro de la snitch
+	SnitchAlaD = Model();
+	SnitchAlaD.LoadModel("Models/snitchAlaD.obj"); //El centro de la snitch
+	
 
 	/* Variable a utilizar */
 	horario = 0.0f;
@@ -456,17 +478,18 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		/* Este ciclo es el encargado de dar el día y la noche en el escenario*/
-		if (horario <= 10.0f) {			//Se ve la noche
+		if (horario <= 7.0f) {			//Se ve la noche
 			skyboxNoche.DrawSkybox(camera.calculateViewMatrix(), projection);			//Se dibuja el cielo
-			horario += 0.001f;
+			horario += 0.01f;
 		}
 		else {
 			skyboxDia.DrawSkybox(camera.calculateViewMatrix(), projection);
-			if (horario > 20.0f && horario > 20.5f) {
+			if (horario > 7.0f && horario > 14.5f) {
 				horario = 0.0f;
 			}
-			horario += 0.001f;
+			horario += 0.01f;
 		}
+		printf("Horario -> %f\n",horario);
 				
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();
@@ -505,7 +528,7 @@ int main()
 		/*---------------------  Piso  --------------------*/
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(20.0f, 1.0f, 40.0f));
+		model = glm::scale(model, glm::vec3(25.0f, 1.0f, 45.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
@@ -536,12 +559,10 @@ int main()
 		sp.render();
 		*/
 
-
-
 		/* --------------------------- Restaurante ----------------------------*/
 		model = glm::mat4(1.0);				//:vec3(-22.0f, 28.0f, 15.0f)
-		model = glm::translate(model, glm::vec3(150.0f, -15.0f, 200.0f));
-		model = glm::scale(model, glm::vec3(22.0f, 25.0f, 50.0f));
+		model = glm::translate(model, glm::vec3(170.0f, -15.0f, 200.0f));
+		model = glm::scale(model, glm::vec3(20.0f, 25.0f, 50.0f));
 		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		restaurante.RenderModel();
@@ -631,16 +652,24 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		DeathStar.RenderModel();
 
+		/*------------------ Gargantua ------------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(250.0f, 100.0f, -500.0f));
+		model = glm::scale(model, glm::vec3(15.0f, 15.0f, 15.0f));
+		model = glm::rotate(model, -150 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Gargantua.RenderModel();
+
 		/*--------------------- KUNAI ---------------------------------*/
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-140.0f, -15.0f, 30.0f));
-		model = glm::scale(model, glm::vec3(1.75f, 1.75f, 1.75f));
+		model = glm::translate(model, glm::vec3(-160.0f, -15.0f, 30.0f));
+		model = glm::scale(model, glm::vec3(1.8f, 1.8f, 1.8f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Kunai.RenderModel();
 		/*-------------------------- Shuriken --------------------------*/
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-140.0f, 0.0f, 30.0f));
-		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+		model = glm::translate(model, glm::vec3(-160.0f, 0.0f, 30.0f));
+		model = glm::scale(model, glm::vec3(8.0f, 8.0f, 8.0f));
 		model = glm::rotate(model, 90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Shuriken4Dagas.RenderModel();
@@ -648,23 +677,23 @@ int main()
 		/*----------------------- Katana Sasuke -----------------------------*/
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-100.0f, 0.0f, 140.0f));
-		model = glm::scale(model, glm::vec3(1.5f, 0.5f, 0.5f));
+		model = glm::scale(model, glm::vec3(2.5f, 0.5f, 2.5f));
 		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Katana.RenderModel();
 
 		/*----------------------- Kubikiri ----------------------------*/
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-120.0f, -2.0f, 140.0f));
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(-150.0f, -2.0f, 140.0f));
+		model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
 		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Kubikiribocho.RenderModel();
 		
 		/*----------------------- Kama --------------------------------*/
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-170.0f, 0.0f, 190.0f));
-		model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
+		model = glm::translate(model, glm::vec3(-220.0f, 0.0f, 190.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 		model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Kama.RenderModel();
@@ -683,6 +712,31 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Naruto.RenderModel();
 
+		/*------------------------ Snitch --------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		modelaux = model;	//Para hacer jerarquía
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Snitch.RenderModel();
+
+		//AlaI
+		model = modelaux;
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(-2.0f, 1.2f, 0.0f));
+		//model = glm::rotate(model, vueloSnitch, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		SnitchAlaI.RenderModel();
+
+		//AlaD
+		model = modelaux;
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(2.0f, 1.2f, 0.0f));
+		//model = glm::rotate(model, -vueloSnitch, glm::vec3(0.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		SnitchAlaD.RenderModel();
 		
 
 
