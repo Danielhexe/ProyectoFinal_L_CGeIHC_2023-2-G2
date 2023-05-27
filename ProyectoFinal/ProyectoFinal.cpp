@@ -63,6 +63,7 @@ Model shukakuBiju;
 Model restaurante;
 Model Naruto;
 Model TrebolC;
+Model Mesa;
 
 //materiales
 Material Material_brillante;
@@ -333,6 +334,8 @@ int main()
 	Naruto.LoadModel("Models/Bandage Naruto.obj");
 	TrebolC = Model();
 	TrebolC.LoadModel("Models/trebolCarmesi.obj");
+	Mesa = Model();
+	Mesa.LoadModel("Models/MESA.obj");
 
 	/* Variable a utilizar */
 	horario = 0.0f;
@@ -599,7 +602,12 @@ int main()
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		TrebolC.RenderModel();
-
+		 /*-------------------------------- MESA -----------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(30.0f, 18.0f, -10.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Mesa.RenderModel();
 
 
 
