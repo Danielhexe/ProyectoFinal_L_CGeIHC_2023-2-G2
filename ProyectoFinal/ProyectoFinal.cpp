@@ -523,6 +523,7 @@ int main()
 
 		/*-----------------Esfera simula la bijudama ------------*/  //Bibudama de fuego
 		//color = glm::vec3(0.1961f, 0.8902f, 0.8196f);
+		/*
 		model = glm::translate(model, glm::vec3(0.4f, 25.0f, -6.0f));
 		model = glm::scale(model, glm::vec3(5.0f, 5.0f,5.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -530,65 +531,142 @@ int main()
 		glUniformMatrix4fv(uniformTextureOffset, 1, GL_FALSE, glm::value_ptr(toffset));
 		LavaT.UseTexture();
 		sp.render();
+		*/
 
-		/* ------------------ Silla para el restaurante   */
- 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, 3.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+
+
+		/* --------------------------- Restaurante ----------------------------*/
+		model = glm::mat4(1.0);				//:vec3(-22.0f, 28.0f, 15.0f)
+		model = glm::translate(model, glm::vec3(150.0f, -15.0f, 200.0f));
+		model = glm::scale(model, glm::vec3(22.0f, 25.0f, 50.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		restaurante.RenderModel();
+
+		/* ------------------ Silla para el restaurante ----------------*/
+ 		model = glm::mat4(1.0);	//Mesa 2 silla 1
+		model = glm::translate(model, glm::vec3(160.0f, -1.0f, -10.0f));
+		model = glm::scale(model, glm::vec3(14.0f, 14.0f, 14.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		silla.RenderModel();
-		
+
+		model = glm::mat4(1.0);	//Mesa 2 silla 2
+		model = glm::translate(model, glm::vec3(160.0f, -1.0f, -50.0f));
+		model = glm::scale(model, glm::vec3(14.0f, 14.0f, 14.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla.RenderModel();
+
+		model = glm::mat4(1.0);	//Mesa 2 silla 3
+		model = glm::translate(model, glm::vec3(110.0f, -1.0f, -50.0f));
+		model = glm::scale(model, glm::vec3(14.0f, 14.0f, 14.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla.RenderModel();
+
+		model = glm::mat4(1.0);	//Mesa 2 silla 4
+		model = glm::translate(model, glm::vec3(110.0f, -1.0f, -10.0f));
+		model = glm::scale(model, glm::vec3(14.0f, 14.0f, 14.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla.RenderModel();
+
+		model = glm::mat4(1.0);	//Mesa 1 silla 1
+		model = glm::translate(model, glm::vec3(50.0f, -1.0f, -10.0f));
+		model = glm::scale(model, glm::vec3(14.0f, 14.0f, 14.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla.RenderModel();
+
+		model = glm::mat4(1.0);	//Mesa 1 silla 2
+		model = glm::translate(model, glm::vec3(50.0f, -1.0f, -50.0f));
+		model = glm::scale(model, glm::vec3(14.0f, 14.0f, 14.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla.RenderModel();
+
+		model = glm::mat4(1.0);	//Mesa 1 silla 3
+		model = glm::translate(model, glm::vec3(10.0f, -1.0f, -50.0f));
+		model = glm::scale(model, glm::vec3(14.0f, 14.0f, 14.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla.RenderModel();
+
+		model = glm::mat4(1.0);	//Mesa 1 silla 4
+		model = glm::translate(model, glm::vec3(10.0f, -1.0f, -10.0f));
+		model = glm::scale(model, glm::vec3(14.0f, 14.0f, 14.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla.RenderModel();
+
+		/*-------------------------------- MESA -----------------------------*/
+		model = glm::mat4(1.0);		//Mesa 1	//80 , 0, 60
+		model = glm::translate(model, glm::vec3(30.0f, -1.0f, -30.0f));
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Mesa.RenderModel();
+
+		model = glm::mat4(1.0);		//Mesa 2
+		model = glm::translate(model, glm::vec3(130.0f, -1.0f, -30.0f));
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Mesa.RenderModel();
+
+		/* ------------------------------ Trebol ---------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(20.0f, 0.0f, -90.0f));
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		TrebolC.RenderModel();
+
 		/*------------------ DEATHSTAR ------------------------------*/
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-150.0f, 20.0f, -150.0f));
-		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::translate(model, glm::vec3(-250.0f, 100.0f, -500.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+		model = glm::rotate(model, -150 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		DeathStar.RenderModel();
 
 		/*--------------------- KUNAI ---------------------------------*/
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-100.0f, 8.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(-140.0f, -15.0f, 30.0f));
+		model = glm::scale(model, glm::vec3(1.75f, 1.75f, 1.75f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Kunai.RenderModel();
-
-		/*----------------------- Kama --------------------------------*/
+		/*-------------------------- Shuriken --------------------------*/
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(28.0f, 8.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(-140.0f, 0.0f, 30.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Kama.RenderModel();
+		Shuriken4Dagas.RenderModel();
+
+		/*----------------------- Katana Sasuke -----------------------------*/
 
 		/*----------------------- Kubikiri ----------------------------*/
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-18.0f, 8.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(-100.0f, -2.0f, 140.0f));
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Kubikiribocho.RenderModel();
-
-		/*-------------------------- Shuriken --------------------------*/
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-100.0f, 8.0f, 30.0f));
-		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Shuriken4Dagas.RenderModel();
-		/*------------------------ Shukaku biju--------------------------*/
 		
+		/*----------------------- Kama --------------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-170.0f, 0.0f, 160.0f));
+		model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Kama.RenderModel();
+
+		/*------------------------ Shukaku biju--------------------------*/		
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-22.0f, 28.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		shukakuBiju.RenderModel();
 
-		/* --------------------------- Restaurante ----------------------------*/
-		model = glm::mat4(1.0);				//:vec3(-22.0f, 28.0f, 15.0f)
-		model = glm::translate(model, glm::vec3(150.0f, -10.0f, 200.0f));
-		model = glm::scale(model, glm::vec3(22.0f, 25.0f, 50.0f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		restaurante.RenderModel();
 		/*---------------------------------- Naruto ------------------*/
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-22.0f, 58.0f, 15.0f));
@@ -597,20 +675,7 @@ int main()
 		Naruto.RenderModel();
 
 		/*---------------------------------- Trebol ------------------*/
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3((-22.0f, 28.0f, 35.0f)));
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		TrebolC.RenderModel();
-		 /*-------------------------------- MESA -----------------------------*/
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(30.0f, 18.0f, -10.0f));
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Mesa.RenderModel();
-
-
-
+		
 
 
 		/* ------------------------- Textura con movimiento------------------------*/
