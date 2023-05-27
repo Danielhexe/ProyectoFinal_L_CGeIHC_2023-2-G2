@@ -60,6 +60,8 @@ Model Kama;
 Model Kubikiribocho;
 Model Shuriken4Dagas;
 Model shukakuBiju;
+Model restaurante;
+Model Naruto;
 
 //materiales
 Material Material_brillante;
@@ -324,7 +326,10 @@ int main()
 	Shuriken4Dagas.LoadModel("Models/Shuriken4Dagas.obj");
 	shukakuBiju = Model();
 	shukakuBiju.LoadModel("Models/Shukaku.obj");
-
+	restaurante = Model();
+	restaurante.LoadModel("Models/RestauranteCompleto.obj");
+	Naruto = Model();
+	Naruto.LoadModel("Models/Bandage Naruto.obj");
 
 	/* Variable a utilizar */
 	horario = 0.0f;
@@ -568,6 +573,19 @@ int main()
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		shukakuBiju.RenderModel();
+
+		/* --------------------- Restaurante ----------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-22.0f, 28.0f, 15.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		restaurante.RenderModel();
+		/*---------------------------------- Naruto ------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-22.0f, 38.0f, 15.0f));
+		model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Naruto.RenderModel();
 
 
 

@@ -3,41 +3,5 @@ illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
-map_Kd plain.png
+map_Kd ao.png
 Ni 1.00
-newmtl restauranteOBJ:Building_Bottom_lowFBXASC046000SG
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd Building_Bottom_albedo.jpeg
-Ni 1.00
-Ks 0.20 0.20 0.20
-Ns 23.00
-newmtl restauranteOBJ:Buliding_Top_lowFBXASC046000SG
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd Building_Top_albedo.jpeg
-Ni 1.00
-Ks 0.20 0.20 0.20
-Ns 23.00
-newmtl restauranteOBJ:Fridge_lowFBXASC046000SG
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd Detail_Objects_albedo.jpeg
-Ni 1.00
-Ks 0.20 0.20 0.20
-Ns 23.00
-newmtl restauranteOBJ:Ground_lowFBXASC046000SG
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd Ground_albedo.jpeg
-Ni 1.00
-Ks 0.20 0.20 0.20
-Ns 23.00
