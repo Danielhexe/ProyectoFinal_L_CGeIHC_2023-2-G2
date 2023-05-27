@@ -62,6 +62,7 @@ Model Shuriken4Dagas;
 Model shukakuBiju;
 Model restaurante;
 Model Naruto;
+Model TrebolC;
 
 //materiales
 Material Material_brillante;
@@ -330,6 +331,8 @@ int main()
 	restaurante.LoadModel("Models/RestauranteCompleto.obj");
 	Naruto = Model();
 	Naruto.LoadModel("Models/Bandage Naruto.obj");
+	TrebolC = Model();
+	TrebolC.LoadModel("Models/trebolCarmesi.obj");
 
 	/* Variable a utilizar */
 	horario = 0.0f;
@@ -447,13 +450,13 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		/* Este ciclo es el encargado de dar el día y la noche en el escenario*/
-		if (horario <= 5.0f) {			//Se ve la noche
+		if (horario <= 10.0f) {			//Se ve la noche
 			skyboxNoche.DrawSkybox(camera.calculateViewMatrix(), projection);			//Se dibuja el cielo
 			horario += 0.001f;
 		}
 		else {
 			skyboxDia.DrawSkybox(camera.calculateViewMatrix(), projection);
-			if (horario > 10.0f && horario > 10.5f) {
+			if (horario > 20.0f && horario > 20.5f) {
 				horario = 0.0f;
 			}
 			horario += 0.001f;
@@ -496,7 +499,7 @@ int main()
 		/*---------------------  Piso  --------------------*/
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(30.0f, 1.0f, 70.0f));
+		model = glm::scale(model, glm::vec3(20.0f, 1.0f, 40.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
@@ -575,17 +578,25 @@ int main()
 		shukakuBiju.RenderModel();
 
 		/* --------------------- Restaurante ----------------------------*/
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-22.0f, 28.0f, 15.0f));
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::mat4(1.0);				//:vec3(-22.0f, 28.0f, 15.0f)
+		model = glm::translate(model, glm::vec3(120.0f, -4.0f, 200.0f));
+		model = glm::scale(model, glm::vec3(22.0f, 25.0f, 50.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		restaurante.RenderModel();
 		/*---------------------------------- Naruto ------------------*/
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-22.0f, 38.0f, 15.0f));
+		model = glm::translate(model, glm::vec3(-22.0f, 58.0f, 15.0f));
 		model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Naruto.RenderModel();
+
+		/*---------------------------------- Naruto ------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3((-22.0f, 28.0f, 35.0f)));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		TrebolC.RenderModel();
 
 
 
