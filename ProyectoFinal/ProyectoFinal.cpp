@@ -537,15 +537,16 @@ int main()
 		
 		/*------------------ DEATHSTAR ------------------------------*/
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(8.0f, 14.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(-150.0f, 20.0f, -150.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		DeathStar.RenderModel();
 
 		/*--------------------- KUNAI ---------------------------------*/
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-8.0f, 8.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(-100.0f, 8.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Kunai.RenderModel();
 
@@ -560,13 +561,14 @@ int main()
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-18.0f, 8.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Kubikiribocho.RenderModel();
 
 		/*-------------------------- Shuriken --------------------------*/
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-22.0f, 8.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(-100.0f, 8.0f, 30.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Shuriken4Dagas.RenderModel();
 		/*------------------------ Shukaku biju--------------------------*/
@@ -577,9 +579,9 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		shukakuBiju.RenderModel();
 
-		/* --------------------- Restaurante ----------------------------*/
+		/* --------------------------- Restaurante ----------------------------*/
 		model = glm::mat4(1.0);				//:vec3(-22.0f, 28.0f, 15.0f)
-		model = glm::translate(model, glm::vec3(120.0f, -10.0f, 200.0f));
+		model = glm::translate(model, glm::vec3(150.0f, -10.0f, 200.0f));
 		model = glm::scale(model, glm::vec3(22.0f, 25.0f, 50.0f));
 		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -591,7 +593,7 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Naruto.RenderModel();
 
-		/*---------------------------------- Naruto ------------------*/
+		/*---------------------------------- Trebol ------------------*/
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3((-22.0f, 28.0f, 35.0f)));
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
