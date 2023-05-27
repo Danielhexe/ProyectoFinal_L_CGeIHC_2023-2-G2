@@ -1,5 +1,5 @@
 # 3ds Max Wavefront OBJ Exporter v0.99 - (c)2007 guruware
-# File Created: 22.05.2023 23:40:27
+# File Created: 26.05.2023 22:36:30
 
 mtllib Shuriken4Dagas.mtl
 
@@ -1694,7 +1694,7 @@ vt 0.3750 0.6884 0.0000
 
 o Shuriken
 g Shuriken
-usemtl 03___Default
+usemtl Shuriken_initialShadingGroup
 s 1
 f 1/1/1 2/1/2 3/2/3 
 f 3/2/3 4/3/4 1/1/1 
