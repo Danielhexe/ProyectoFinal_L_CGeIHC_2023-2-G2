@@ -468,9 +468,9 @@ int main()
 	//contador de luces puntuales
 	unsigned int pointLightCount = 0;
 	//Declaración de primer luz puntual
-	pointLights[0] = PointLight(1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f,
-		0.0f, 2.5f, 1.5f,
+	pointLights[0] = PointLight(1.0f, 0.9647f, 0.3373f,
+		0.0f, 5.0f,
+		0.0f, 5.f, 1.5f,
 		0.3f, 0.2f, 0.1f);
 	pointLightCount++;
 
@@ -485,12 +485,12 @@ int main()
 	spotLightCount++;
 
 	//luz fija
-	spotLights[1] = SpotLight(0.0f, 0.0f, 1.0f,
+	spotLights[1] = SpotLight(0.4784, 0.0588, 0.8196,
 		1.0f, 2.0f,
-		5.0f, 10.0f, 0.0f,
+		5.0f, 20.0f, 0.0f,
 		0.0f, -5.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
-		15.0f);
+		35.0f);
 	spotLightCount++;
 
 
@@ -950,6 +950,7 @@ int main()
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			modelaux = model;
 			modelBiju = modelaux;
+
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			shukakuBijuTorzo.RenderModel();
 
@@ -1041,6 +1042,8 @@ int main()
 			model = modelBiju;
 			model = glm::translate(model, glm::vec3(10.0f + lanzaBiju, 7.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(creceBiju, creceBiju, creceBiju));
+					glm::vec3 muevePoint = glm::vec3(-35, 60.0f, movBiju - 200.f + 70.0f + (4.5 * lanzaBiju));
+					spotLights[1].SetPos(muevePoint);
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			bijudama.RenderModel();
 		}
