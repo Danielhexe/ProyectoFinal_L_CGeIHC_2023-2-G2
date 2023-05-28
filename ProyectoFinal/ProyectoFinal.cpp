@@ -50,6 +50,15 @@ bool frente;
 float offsetAlas;
 float alas;
 bool aleteo;
+/* -------------------------- Biju ----------------*/
+float offsetBiju;
+float cuerpoMovBiju;
+bool colitaCaminar;
+float movBiju;
+bool inicioBiju;
+float offsetBijumov;
+float creceBiju;
+float lanzaBiju;
 
 /* --------------- Animación gargantua -----------------*/
 float crece;
@@ -80,7 +89,10 @@ Model Kunai;
 Model Kama;
 Model Kubikiribocho;
 Model Shuriken4Dagas;
-Model shukakuBiju;
+//Shukaku
+Model shukakuBijuTorzo, shukakuBijuColita, shukakuBijuBraDer, shukakuBiju, shukakuBijuBraIzq, shukakuBijuPieDer, shukakuBijuPieIzq, bijudama;
+
+
 Model restaurante;
 Model Naruto;
 Model TrebolC;
@@ -361,8 +373,22 @@ int main()
 	Kubikiribocho.LoadModel("Models/Kubikiribocho.obj");
 	Shuriken4Dagas = Model();
 	Shuriken4Dagas.LoadModel("Models/Shuriken4Dagas.obj");
-	shukakuBiju = Model();
-	shukakuBiju.LoadModel("Models/Shukaku.obj");
+	//Shukau
+	shukakuBijuTorzo = Model();
+	shukakuBijuTorzo.LoadModel("Models/torzo.obj");
+	shukakuBijuColita = Model();
+	shukakuBijuColita.LoadModel("Models/colita.obj");
+	shukakuBijuBraIzq = Model();
+	shukakuBijuBraIzq.LoadModel("Models/brazoIzq.obj");
+	shukakuBijuBraDer = Model();
+	shukakuBijuBraDer.LoadModel("Models/brazoDer.obj");
+	shukakuBijuPieIzq = Model();
+	shukakuBijuPieIzq.LoadModel("Models/pieIzq.obj");
+	shukakuBijuPieDer = Model();
+	shukakuBijuPieDer.LoadModel("Models/pieDer.obj");
+	bijudama = Model();
+	bijudama.LoadModel("Models/bijudamaOBJ.obj");
+
 	restaurante = Model();
 	restaurante.LoadModel("Models/RestauranteCompleto.obj");
 	Naruto = Model();
@@ -507,6 +533,16 @@ int main()
 	inicioV = true;
 	frente = true;
 	rotFlag = false;
+	/* ----------------------------------------Biju----------------------------------*/
+	cuerpoMovBiju = 0.0f;
+	offsetBiju = 0.005;
+	colitaCaminar = true;
+	movBiju = 0.0f;
+	inicioBiju = true;
+	offsetBijumov = 0.04;
+	creceBiju = 0.0f;
+	lanzaBiju = 0.0f;
+
 	/* ------------------------------Gargantua----------------------------------------------*/
 	crece = 0.0f;
 	angulo = 0.0f;
@@ -578,6 +614,7 @@ int main()
 		/* Se declaran algunas matrices auxiliares*/
 		glm::mat4 model(1.0);
 		glm::mat4 modelaux(1.0);
+		glm::mat4 modelBiju(1.0);
 		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 		glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
 
@@ -885,18 +922,86 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Cabeza.RenderModel();
 
+		/*------------------------ Shukaku biju--------------------------*/
+		//Torzo
+		movBiju += offsetBijumov * deltaTime;
+
+		if (movBiju > 1.0f && inicioBiju) {	//inicioV bandera para ajustar la posición  a 0.5 y de ahí arrancar sino vueloSnitch en el incio es > 40 y se desaparece xd
+			movBiju = 0.5;
+			inicioBiju = false;
+		}
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-30.0f, -1.0f, movBiju - 200));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, .0f));
+		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+		modelaux = model;
+		modelBiju = modelaux;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		shukakuBijuTorzo.RenderModel();
+
+		//cuerpoMovBiju += 0.01f;
+		if (colitaCaminar && cuerpoMovBiju <= 0.4f) {
+			cuerpoMovBiju += offsetBiju * deltaTime;
+		}
+		else {
+			colitaCaminar = false;
+			cuerpoMovBiju -= offsetBiju * deltaTime;
+			if (cuerpoMovBiju > 1.5) cuerpoMovBiju = .5;
+			if (cuerpoMovBiju < -0.15f) {
+				colitaCaminar = true;
+			}
+		}
+
+		//Colita
+		model = modelaux;
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(-3.4f, 1.6f, 0.0f));
+		model = glm::rotate(model, cuerpoMovBiju, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		shukakuBijuColita.RenderModel();
+
+		//Brazo Derecho
+		model = modelaux;
+		model = glm::scale(model, glm::vec3(0.75f, 0.75f, 0.75f));
+		model = glm::translate(model, glm::vec3(-2.0f, 3.f, -2.8f));
+		model = glm::rotate(model, -60 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, cuerpoMovBiju, glm::vec3(0.0f, 1.0f, .0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		shukakuBijuBraDer.RenderModel();
+
+		//Brazo Izquierdo
+		model = modelaux;
+		model = glm::scale(model, glm::vec3(0.75f, 0.75f, 0.75f));
+		model = glm::translate(model, glm::vec3(0.0f, 4.f, 5.f));
+		model = glm::rotate(model, 60 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, cuerpoMovBiju, glm::vec3(0.0f, 1.0f, .0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		shukakuBijuBraIzq.RenderModel();
+
+		//Pie Derecho
+		model = modelaux;
+		model = glm::scale(model, glm::vec3(0.75f, 0.75f, 0.75f));
+		model = glm::translate(model, glm::vec3(0.0f, -1.0f, -.7f));
+		model = glm::rotate(model, cuerpoMovBiju, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		shukakuBijuPieDer.RenderModel();
+
+		//Pie Izquierdo
+		model = modelaux;
+		model = glm::scale(model, glm::vec3(0.75f, 0.75f, 0.75f));
+		model = glm::translate(model, glm::vec3(0.0f, -1.2f, 3.5f));
+		model = glm::rotate(model, -cuerpoMovBiju, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		shukakuBijuPieIzq.RenderModel();
+
 
 		/* ------------------------- Textura con movimiento------------------------*/
 		//Importantes porque la variable uniform no podemos modificarla directamente
 		toffsetu += 0.001;
 		toffsetv += 0.001;
-		//para que no se desborde la variable
 		if (toffsetu > 1.0)
 			toffsetu = 0.0;
-		//if (toffsetv > 1.0)
-		//toffsetv = 0;
-		//printf("\ntfosset %f \n", toffsetu);
-		//pasar a la variable uniform el valor actualizado
 		toffset = glm::vec2(toffsetu, toffsetv);
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, 0.2f, -6.0f));
@@ -908,9 +1013,25 @@ int main()
 		//Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[4]->RenderMesh();
 		glDisable(GL_BLEND);
+
+		//Bijudama tiene textura
+
+		if (creceBiju < 3.0f) creceBiju += 0.01;
+		else if (lanzaBiju < 50.0) lanzaBiju += 0.05;
+		else {
+			lanzaBiju = 50.0;
+			creceBiju += 0.01;
+		}
+
+		printf("crece -> %f | lanza -> %f\n", creceBiju, lanzaBiju);
+
+		model = modelBiju;
+		model = glm::translate(model, glm::vec3(10.0f + lanzaBiju, 7.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(creceBiju, creceBiju, creceBiju));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		bijudama.RenderModel();
 		
 		glUseProgram(0);
-
 		mainWindow.swapBuffers();
 	}
 

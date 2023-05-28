@@ -1,0 +1,18 @@
+newmtl Shukaku:Shukaku1Mtl
+illum 4
+Kd 0.35 0.36 0.42
+Ka 0.35 0.36 0.42
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.02 0.02 0.03
+Ns 0.00
+newmtl Shukaku:Shukaku2Mtl
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Shukaku2Tex.png
+map_Ka Shukaku2Tex.png
+Ni 1.00
+Ks 0.40 0.40 0.40
+Ns 0.00
