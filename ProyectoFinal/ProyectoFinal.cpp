@@ -92,6 +92,7 @@ Model Kunai;
 Model Kama;
 Model Kubikiribocho;
 Model Shuriken4Dagas;
+Model Bandana;
 //Shukaku
 Model shukakuBijuTorzo, shukakuBijuColita, shukakuBijuBraDer, shukakuBiju, shukakuBijuBraIzq, shukakuBijuPieDer, shukakuBijuPieIzq, bijudama;
 
@@ -403,6 +404,8 @@ int main()
 	shukakuBijuPieDer.LoadModel("Models/pieDer.obj");
 	bijudama = Model();
 	bijudama.LoadModel("Models/bijudamaOBJ.obj");
+	Bandana = Model();
+	Bandana.LoadModel("Models/Bandana.obj");
 
 	restaurante = Model();
 	restaurante.LoadModel("Models/RestauranteCompleto.obj");
@@ -872,6 +875,13 @@ int main()
 			model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			shukakuBiju.RenderModel();
+
+			/*-------------------------- BANDANA -------------------------------*/
+			model = glm::mat4(1.0);
+			model = glm::translate(model, glm::vec3(-200.0f, 10.0f, 10.0f));
+			model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Bandana.RenderModel();
 
 			/*---------------------------------- Naruto ------------------*/
 			model = glm::mat4(1.0);
