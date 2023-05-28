@@ -681,18 +681,6 @@ int main()
 
 		if (xg >= 0.0f) {
 
-			/*-----------------Esfera simula la bijudama ------------*/  //Bibudama de fuego
-			//color = glm::vec3(0.1961f, 0.8902f, 0.8196f);
-			/*
-			model = glm::translate(model, glm::vec3(0.4f, 25.0f, -6.0f));
-			model = glm::scale(model, glm::vec3(5.0f, 5.0f,5.0f));
-			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-			glUniformMatrix4fv(uniformTextureOffset, 1, GL_FALSE, glm::value_ptr(toffset));
-			LavaT.UseTexture();
-			sp.render();
-			*/
-
 			/* --------------------------- Restaurante ----------------------------*/
 			model = glm::mat4(1.0);				//:vec3(-22.0f, 28.0f, 15.0f)
 			model = glm::translate(model, glm::vec3(170.0f, -15.0f, 200.0f));
@@ -959,7 +947,7 @@ int main()
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(-30.0f, -1.0f, movBiju - 200));
 			model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, .0f));
-			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			modelaux = model;
 			modelBiju = modelaux;
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
