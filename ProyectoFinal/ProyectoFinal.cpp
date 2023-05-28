@@ -885,8 +885,9 @@ int main()
 
 			/*---------------------------------- Naruto ------------------*/
 			model = glm::mat4(1.0);
-			model = glm::translate(model, glm::vec3(-22.0f, 58.0f, 15.0f));
-			model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
+			model = glm::translate(model, glm::vec3(-170.0f, 0.0f, -120.0f));
+			model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+			model = glm::rotate(model, 90*toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Naruto.RenderModel();
 
@@ -1013,7 +1014,7 @@ int main()
 			model = glm::mat4(1.0);
 			model = glm::translate(model, glm::vec3(-30.0f, -1.0f, movBiju - 200));
 			model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, .0f));
-			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			model = glm::scale(model, glm::vec3(12.0f, 12.0f, 12.0f));
 			modelaux = model;
 			modelBiju = modelaux;
 
