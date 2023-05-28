@@ -450,12 +450,12 @@ int main()
 
 	//Se coloca el siguiente horario
 	std::vector<std::string> skyboxFacesDia;
-	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_rt.tga");
-	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_lf.tga");
-	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_dn.tga");
-	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_up.tga");
-	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_bk.tga");
-	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_ft.tga");
+	skyboxFacesDia.push_back("Textures/Skybox/Dia/Aldea_RT.tga");
+	skyboxFacesDia.push_back("Textures/Skybox/Dia/Aldea_LT.tga");
+	skyboxFacesDia.push_back("Textures/Skybox/Dia/Aldea_DT.tga");
+	skyboxFacesDia.push_back("Textures/Skybox/Dia/Aldea_UT.tga");
+	skyboxFacesDia.push_back("Textures/Skybox/Dia/Aldea_LT.tga");
+	skyboxFacesDia.push_back("Textures/Skybox/Dia/Aldea_FT.tga");
 	skyboxDia = Skybox(skyboxFacesDia);
 
 	Material_brillante = Material(4.0f, 256);
