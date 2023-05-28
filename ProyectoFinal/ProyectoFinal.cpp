@@ -56,6 +56,7 @@ float crece;
 float angulo;
 float xg;
 float zg;
+float gC;
 
 
 Window mainWindow;
@@ -495,6 +496,7 @@ int main()
 	angulo = 0.0f;
 	xg = 300.f;
 	zg = -500.0f;
+	gC = 0.0f;
 
 	
 
@@ -696,11 +698,14 @@ int main()
 			xg -= 0.2;
 			zg += 0.32;
 		}
+		if (gC <= 300.0f) {
+			gC+=0.2f;
+		}
 		if (angulo < 360) angulo += 1.f;
 		else angulo = 0.0f;
 		model = glm::mat4(1.0);				//x	= 300f;		z=-500.0f;
 		model = glm::translate(model, glm::vec3(xg, 50.0f, zg));
-		model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+		model = glm::scale(model, glm::vec3(20.0f + gC, 20.0f + gC, 20.0f + gC));
 		model = glm::rotate(model, angulo * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		modelaux = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -823,6 +828,9 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		SnitchAlaD.RenderModel();
+
+
+
 		
 
 
