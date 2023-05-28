@@ -30,38 +30,63 @@ Desarrollo del proyecto final de computación gráfica
 #include "Material.h"
 const float toRadians = 3.14159265f / 180.0f;
 
+//Horario
+float horario;
 //variables para animación
-float movCoche;
-float movOffset;
-float rotllanta;
-float rotllantaOffset;
-bool avanza;
 float toffsetu = 0.0f;
 float toffsetv = 0.0f;
 float reproduciranimacion, habilitaranimacion,
 guardoFrame, reinicioFrame, ciclo, ciclo2, contador = 0;
 
 
+
+//Animación básica
+float offsetSnitch;
+float vueloSnitch;
+float rotateSnitch;
+bool inicioV;
+bool rotFlag;
+bool frente;
+
+float offsetAlas;
+float alas;
+bool aleteo;
+
 Window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
 
-Camera camera;
+Sphere sp = Sphere(1.0, 20, 20);		//Creacion de bijudamas
 
-Texture brickTexture;
-Texture dirtTexture;
-Texture plainTexture;
+Camera camera;
+Texture LavaT;
 Texture pisoTexture;
 Texture AgaveTexture;
 Texture FlechaTexture;
 
-Model Kitt_M;
-Model Llanta_M;
-Model Camino_M;
-Model Blackhawk_M;
-Model Dado_M;
+Skybox skyboxNoche;
+Skybox skyboxDia;
 
-Skybox skybox;
+Model silla;
+Model DeathStar;
+Model Kunai;
+Model Kama;
+Model Kubikiribocho;
+Model Shuriken4Dagas;
+Model shukakuBiju;
+Model restaurante;
+Model Naruto;
+Model TrebolC;
+Model Mesa;
+Model Katana;
+Model Gargantua;
+
+//Snithc
+Model Snitch;
+Model SnitchAlaI;
+Model SnitchAlaD;
+
+
 
 //materiales
 Material Material_brillante;
@@ -78,17 +103,12 @@ DirectionalLight mainLight;
 //para declarar varias luces de tipo pointlight
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
-
 // Vertex Shader
 static const char* vShader = "shaders/shader_light.vert";
-
 // Fragment Shader
 static const char* fShader = "shaders/shader_light.frag";
-
 //PARA INPUT CON KEYFRAMES 
 void inputKeyframes(bool* keys);
-
-
 //cálculo del promedio de las normales para sombreado de Phong
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
 	unsigned int vLength, unsigned int normalOffset)
@@ -117,7 +137,6 @@ void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat
 		vertices[nOffset] = vec.x; vertices[nOffset + 1] = vec.y; vertices[nOffset + 2] = vec.z;
 	}
 }
-
 
 void CreateObjects()
 {
@@ -168,7 +187,6 @@ void CreateObjects()
 
 	};
 	
-
 	unsigned int flechaIndices[] = {
 	   0, 1, 2,
 	   0, 2, 3,
@@ -204,26 +222,18 @@ void CreateObjects()
 	meshList.push_back(obj5);
 
 }
-
-
 void CreateShaders()
 {
 	Shader *shader1 = new Shader();
 	shader1->CreateFromFiles(vShader, fShader);
 	shaderList.push_back(*shader1);
 }
-
 ///////////////////////////////KEYFRAMES/////////////////////
-
-
 bool animacion = false;
-
-
 //NEW// Keyframes
 float posXavion = 2.0, posYavion = 5.0, posZavion = -3.0; //Estado inicial
 float	movAvion_x = 0.0f, movAvion_y = 0.0f;
 float giroAvion = 0;
-
 #define MAX_FRAMES 30
 int i_max_steps = 350;		//Fluides de la animación, más grande, mas fluido =! consume más recuros //Default 90
 int i_curr_steps = 5;
@@ -258,7 +268,6 @@ void saveFrame(void)
 	printf("KeyFrame[%d].movAvion_x = %f;\n",FrameIndex,movAvion_x);
 	FrameIndex++;
 }
-
 void resetElements(void)
 {
 
@@ -266,7 +275,6 @@ void resetElements(void)
 	movAvion_y = KeyFrame[0].movAvion_y;
 	giroAvion = KeyFrame[0].giroAvion;
 }
-
 void interpolation(void)
 {
 	KeyFrame[playIndex].movAvion_xInc = (KeyFrame[playIndex + 1].movAvion_x - KeyFrame[playIndex].movAvion_x) / i_max_steps;
@@ -274,8 +282,6 @@ void interpolation(void)
 	KeyFrame[playIndex].giroAvionInc = (KeyFrame[playIndex + 1].giroAvion - KeyFrame[playIndex].giroAvion) / i_max_steps;
 
 }
-
-
 void animate(void)
 {
 	//Movimiento del objeto
@@ -314,58 +320,84 @@ void animate(void)
 	}
 }
 
-/* FIN KEYFRAMES*/
-
-
-
-
-
 int main()
 {
 	mainWindow = Window(1366, 768); // 1280, 1024 or 1024, 768
 	mainWindow.Initialise();
-
 	CreateObjects();
 	CreateShaders();
-
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.5f, 0.5f);
-
-	brickTexture = Texture("Textures/brick.png");
-	brickTexture.LoadTextureA();
-	dirtTexture = Texture("Textures/dirt.png");
-	dirtTexture.LoadTextureA();
-	plainTexture = Texture("Textures/plain.png");
-	plainTexture.LoadTextureA();
+	/* ----------------- Texturas -------------------*/
 	pisoTexture = Texture("Textures/AldeaHoja.tga");
 	pisoTexture.LoadTextureA();
 	AgaveTexture = Texture("Textures/Agave.tga");
 	AgaveTexture.LoadTextureA();
 	FlechaTexture = Texture("Textures/flechas.tga");
 	FlechaTexture.LoadTextureA();
-	Kitt_M = Model();
-	Kitt_M.LoadModel("Models/kitt.obj");
-	Llanta_M = Model();
-	Llanta_M.LoadModel("Models/k_rueda.3ds");
-	Blackhawk_M = Model();
-	Blackhawk_M.LoadModel("Models/uh60.obj");
-	Camino_M = Model();
-	Camino_M.LoadModel("Models/railroad track.obj");
+	LavaT = Texture("Textures/lava2TGA.tga");
+	LavaT.LoadTextureA();
+	/*---------------------------- MODELOS -----------------------------------*/
+	silla = Model();
+	silla.LoadModel("Models/sillaRestaurante.obj");
+	DeathStar = Model();
+	DeathStar.LoadModel("Models/DeathStar.obj");
+	Kunai = Model();
+	Kunai.LoadModel("Models/Kunai.obj");
+	Kama = Model();
+	Kama.LoadModel("Models/KAma.obj");
+	Kubikiribocho = Model();
+	Kubikiribocho.LoadModel("Models/Kubikiribocho.obj");
+	Shuriken4Dagas = Model();
+	Shuriken4Dagas.LoadModel("Models/Shuriken4Dagas.obj");
+	shukakuBiju = Model();
+	shukakuBiju.LoadModel("Models/Shukaku.obj");
+	restaurante = Model();
+	restaurante.LoadModel("Models/RestauranteCompleto.obj");
+	Naruto = Model();
+	Naruto.LoadModel("Models/Bandage Naruto.obj");
+	TrebolC = Model();
+	TrebolC.LoadModel("Models/trebolCarmesi.obj");
+	Mesa = Model();
+	Mesa.LoadModel("Models/MESA.obj");
+	Katana = Model();
+	Katana.LoadModel("Models/KAtana.obj");
+	Gargantua = Model();
+	Gargantua.LoadModel("Models/gargantua.obj");
+	
+	//Snitch jerarquía
+	Snitch = Model();
+	Snitch.LoadModel("Models/snitchOBJ.obj"); //El centro de la snitch
+	SnitchAlaI = Model();
+	SnitchAlaI.LoadModel("Models/snitchAlaI.obj"); //El centro de la snitch
+	SnitchAlaD = Model();
+	SnitchAlaD.LoadModel("Models/snitchAlaD.obj"); //El centro de la snitch
+	
 
+	/* Variable a utilizar */
+	horario = 0.0f;
 
-	//Este es para colocar el fondo de todo el proyecto
+	/* Aquí es para colocar el fondo de todo el proyecto además de colocar el día y la noche todo se carga*/
 	std::vector<std::string> skyboxFaces;
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_dn.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_up.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_bk.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_ft.tga");
+	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_RT.tga");			//Right
+	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_LT.tga");			//Left
+ 	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_DT.tga");			//Down
+	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_UT.tga");			//Up
+	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_BT.tga");			//Back				//CA	
+	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_FT.tga");			//Front	256x256		
+	skyboxNoche = Skybox(skyboxFaces);
 
-	skybox = Skybox(skyboxFaces);
+	//Se coloca el siguiente horario
+	std::vector<std::string> skyboxFacesDia;
+	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_rt.tga");
+	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_lf.tga");
+	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_dn.tga");
+	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_up.tga");
+	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_bk.tga");
+	skyboxFacesDia.push_back("Textures/Skybox/cupertin-lake_ft.tga");
+	skyboxDia = Skybox(skyboxFacesDia);
 
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
-
 
 	//luz direccional, sólo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
@@ -387,7 +419,7 @@ int main()
 		0.0f, 0.0f, 0.0f,
 		0.0f, -1.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
-		5.0f);
+		15.0f);
 	spotLightCount++;
 
 	//luz fija
@@ -407,29 +439,19 @@ int main()
 	GLuint uniformColor = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	
-	movCoche = 0.0f;
-	movOffset = 0.01f;
-	rotllanta = 0.0f;
-	rotllantaOffset = 5.0f;
-	avanza = true;
-
 	glm::vec3 posblackhawk = glm::vec3(2.0f, 0.0f, 0.0f);
 	//KEYFRAMES DECLARADOS INICIALES
-
 	KeyFrame[0].movAvion_x = 0.0f;
 	KeyFrame[0].movAvion_y = 0.0f;
 	KeyFrame[0].giroAvion = 0;
-
 
 	KeyFrame[1].movAvion_x = 1.0f;
 	KeyFrame[1].movAvion_y = 2.0f;
 	KeyFrame[1].giroAvion = 0;
 
-
 	KeyFrame[2].movAvion_x = 2.0f;
 	KeyFrame[2].movAvion_y = 0.0f;
 	KeyFrame[2].giroAvion = 0;
-
 
 	KeyFrame[3].movAvion_x = 3.0f;
 	KeyFrame[3].movAvion_y = -2.0f;
@@ -444,9 +466,23 @@ int main()
 
 
 
-
+	//Para cargar esferas esto funcionaría como las primitivas geométricas
+	sp.init(); //inicializar esfera
+	sp.load();//enviar la esfera al shader
 
 	
+	/* Se declaran las variables */
+	offsetSnitch = 0.3f;
+	offsetAlas = 0.1;
+	vueloSnitch =0.0f;
+	rotateSnitch = 0.0f;
+	alas = 0.0f;
+	aleteo = true;
+	inicioV = true;
+	frente = true;
+	rotFlag = false;
+
+
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
 	{
@@ -454,53 +490,30 @@ int main()
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
-
-		if(avanza)
-		{
-			if (movCoche < 301.0f)
-			{
-				movCoche -= movOffset * deltaTime;
-				//printf("avanza%f \n ",movCoche);
-
-			}
-			if (movCoche < -300.0f)
-			{
-				avanza = false;
-			}
-		}
-		else
-		{
-			if (movCoche < 300.0f)
-			{
-				movCoche += movOffset * deltaTime;
-
-			}
-			else
-			{
-				//printf("entro");
-				avanza = true;
-			}
-
-		}
-
-
-		rotllanta += rotllantaOffset * deltaTime;
-
-
 		//Recibir eventos del usuario
 		glfwPollEvents();
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
-
 		//para keyframes
 		inputKeyframes(mainWindow.getsKeys());
 		animate();
-
-
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
+		/* Este ciclo es el encargado de dar el día y la noche en el escenario*/
+		if (horario <= 7.0f) {			//Se ve la noche
+			skyboxNoche.DrawSkybox(camera.calculateViewMatrix(), projection);			//Se dibuja el cielo
+			horario += 0.01f;
+		}
+		else {
+			skyboxDia.DrawSkybox(camera.calculateViewMatrix(), projection);
+			if (horario > 7.0f && horario > 14.5f) {
+				horario = 0.0f;
+			}
+			horario += 0.01f;
+		}
+		//printf("Horario -> %f\n",horario);
+				
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();
 		uniformProjection = shaderList[0].GetProjectionLocation();
@@ -528,78 +541,27 @@ int main()
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
 
-
+		/* Se declaran algunas matrices auxiliares*/
 		glm::mat4 model(1.0);
 		glm::mat4 modelaux(1.0);
 		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 		glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
 
+
+		/*---------------------  Piso  --------------------*/
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(30.0f, 1.0f, 30.0f));
+		model = glm::scale(model, glm::vec3(25.0f, 1.0f, 45.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		pisoTexture.UseTexture();
-		//Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-
 		meshList[2]->RenderMesh();
 
-
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(movCoche, 0.5f, -1.5f));
-		modelaux = model;
-		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Kitt_M.RenderModel();
-		model = modelaux;
-		model = glm::translate(model, glm::vec3(-1.0, -0.1f, 0.2f));
-		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.07f));
-		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, rotllanta * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		//Llanta_M.RenderModel();
-
-
-		//model = glm::mat4(1.0);
-		//model = glm::translate(model, glm::vec3(0.0f+3*movCoche, 3.0f + 0.33*sin(glm::radians(rotllanta)), -1.0 ));
-		//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		//model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-		//model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
-
-		//Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		////color = glm::vec3(0.0f, 1.0f, 0.0f);
-		////glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		//Blackhawk_M.RenderModel();
-
-		model = glm::mat4(1.0);
-		posblackhawk = glm::vec3(posXavion + movAvion_x, posYavion + movAvion_y, posZavion);
-		model = glm::translate(model, posblackhawk);
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		model = glm::rotate(model, giroAvion * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		Blackhawk_M.RenderModel();
-
-
-		//color = glm::vec3(1.0f, 1.0f, 1.0f);
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, -1.53f, 0.0f));
-		model = glm::scale(model, glm::vec3(25.0f, 1.0f, 2.0f));
-
-		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Camino_M.RenderModel();
-
-		//Agave ¿qué sucede si lo renderizan antes del coche y de la pista?
+		//AGAVE ¿qué sucede si lo renderizan antes del coche y de la pista?
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, 0.5f, -2.0f));
-		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		//blending: transparencia o traslucidez
 		glEnable(GL_BLEND);
@@ -607,9 +569,233 @@ int main()
 		AgaveTexture.UseTexture();
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[3]->RenderMesh();
+
+		/*-----------------Esfera simula la bijudama ------------*/  //Bibudama de fuego
+		//color = glm::vec3(0.1961f, 0.8902f, 0.8196f);
+		/*
+		model = glm::translate(model, glm::vec3(0.4f, 25.0f, -6.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f,5.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		glUniformMatrix4fv(uniformTextureOffset, 1, GL_FALSE, glm::value_ptr(toffset));
+		LavaT.UseTexture();
+		sp.render();
+		*/
+
+		/* --------------------------- Restaurante ----------------------------*/
+		model = glm::mat4(1.0);				//:vec3(-22.0f, 28.0f, 15.0f)
+		model = glm::translate(model, glm::vec3(170.0f, -15.0f, 200.0f));
+		model = glm::scale(model, glm::vec3(20.0f, 25.0f, 50.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		restaurante.RenderModel();
+
+		/* ------------------ Silla para el restaurante ----------------*/
+ 		model = glm::mat4(1.0);	//Mesa 2 silla 1
+		model = glm::translate(model, glm::vec3(160.0f, -1.0f, -10.0f));
+		model = glm::scale(model, glm::vec3(14.0f, 14.0f, 14.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla.RenderModel();
+
+		model = glm::mat4(1.0);	//Mesa 2 silla 2
+		model = glm::translate(model, glm::vec3(160.0f, -1.0f, -50.0f));
+		model = glm::scale(model, glm::vec3(14.0f, 14.0f, 14.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla.RenderModel();
+
+		model = glm::mat4(1.0);	//Mesa 2 silla 3
+		model = glm::translate(model, glm::vec3(110.0f, -1.0f, -50.0f));
+		model = glm::scale(model, glm::vec3(14.0f, 14.0f, 14.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla.RenderModel();
+
+		model = glm::mat4(1.0);	//Mesa 2 silla 4
+		model = glm::translate(model, glm::vec3(110.0f, -1.0f, -10.0f));
+		model = glm::scale(model, glm::vec3(14.0f, 14.0f, 14.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla.RenderModel();
+
+		model = glm::mat4(1.0);	//Mesa 1 silla 1
+		model = glm::translate(model, glm::vec3(50.0f, -1.0f, -10.0f));
+		model = glm::scale(model, glm::vec3(14.0f, 14.0f, 14.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla.RenderModel();
+
+		model = glm::mat4(1.0);	//Mesa 1 silla 2
+		model = glm::translate(model, glm::vec3(50.0f, -1.0f, -50.0f));
+		model = glm::scale(model, glm::vec3(14.0f, 14.0f, 14.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla.RenderModel();
+
+		model = glm::mat4(1.0);	//Mesa 1 silla 3
+		model = glm::translate(model, glm::vec3(10.0f, -1.0f, -50.0f));
+		model = glm::scale(model, glm::vec3(14.0f, 14.0f, 14.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla.RenderModel();
+
+		model = glm::mat4(1.0);	//Mesa 1 silla 4
+		model = glm::translate(model, glm::vec3(10.0f, -1.0f, -10.0f));
+		model = glm::scale(model, glm::vec3(14.0f, 14.0f, 14.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		silla.RenderModel();
+
+		/*-------------------------------- MESA -----------------------------*/
+		model = glm::mat4(1.0);		//Mesa 1	//80 , 0, 60
+		model = glm::translate(model, glm::vec3(30.0f, -1.0f, -30.0f));
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Mesa.RenderModel();
+
+		model = glm::mat4(1.0);		//Mesa 2
+		model = glm::translate(model, glm::vec3(130.0f, -1.0f, -30.0f));
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Mesa.RenderModel();
+
+		/* ------------------------------ Trebol ---------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(20.0f, 0.0f, -90.0f));
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		TrebolC.RenderModel();
+
+		/*------------------ DEATHSTAR ------------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-250.0f, 100.0f, -500.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+		model = glm::rotate(model, -150 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		DeathStar.RenderModel();
+
+		/*------------------ Gargantua ------------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(250.0f, 100.0f, -500.0f));
+		model = glm::scale(model, glm::vec3(15.0f, 15.0f, 15.0f));
+		model = glm::rotate(model, -150 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Gargantua.RenderModel();
+
+		/*--------------------- KUNAI ---------------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-160.0f, -15.0f, 30.0f));
+		model = glm::scale(model, glm::vec3(1.8f, 1.8f, 1.8f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Kunai.RenderModel();
+		/*-------------------------- Shuriken --------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-160.0f, 0.0f, 30.0f));
+		model = glm::scale(model, glm::vec3(8.0f, 8.0f, 8.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Shuriken4Dagas.RenderModel();
+
+		/*----------------------- Katana Sasuke -----------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-100.0f, 0.0f, 140.0f));
+		model = glm::scale(model, glm::vec3(2.5f, 0.5f, 2.5f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Katana.RenderModel();
+
+		/*----------------------- Kubikiri ----------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-150.0f, -2.0f, 140.0f));
+		model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Kubikiribocho.RenderModel();
+		
+		/*----------------------- Kama --------------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-220.0f, 0.0f, 190.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Kama.RenderModel();
+
+		/*------------------------ Shukaku biju--------------------------*/		
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-22.0f, 28.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		shukakuBiju.RenderModel();
+
+		/*---------------------------------- Naruto ------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-22.0f, 58.0f, 15.0f));
+		model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Naruto.RenderModel();
+
+		/*------------------------ Snitch --------------------------*/
+		if (vueloSnitch < 70.0f && frente) {		//Esto representa la distancia que debe recorrer
+			vueloSnitch += offsetSnitch * deltaTime;	//Para ajustar nuestro ciclo de reloj y se vea bien
+			if (rotateSnitch >= 0.0f && rotFlag) {
+				rotateSnitch -= 0.05;	//Para hacer que vuelva a su estado de ver hacia adelante
+			}
+		}else{
+			vueloSnitch -= offsetSnitch * deltaTime;
+			frente = false;
+			if (vueloSnitch < -30.5f) { frente = true; }
+			if (rotateSnitch <= (180.0*toRadians)) {
+				rotateSnitch += 0.05;
+			}
+			else { rotFlag = true; }		//Si no tenemos una bandera auxiliar cuando recién inicie el programa va a hacer el (rotateSnitch >= 0.0f && rotFlag)
+		}
+
+		if (vueloSnitch > 1.0f && inicioV) {	//inicioV bandera para ajustar la posición  a 0.5 y de ahí arrancar sino vueloSnitch en el incio es > 40 y se desaparece xd
+			vueloSnitch = 0.5;
+			inicioV = false;
+		}
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(8*sin(vueloSnitch/4),50 + (2.5*sin(vueloSnitch)), vueloSnitch));
+		model = glm::rotate(model, rotateSnitch, glm::vec3(0.0f, 1.0f, 0.0f));
+		modelaux = model;	//Para hacer jerarquía
+		model = glm::scale(model, glm::vec3(2.5f, 2.0f, 2.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Snitch.RenderModel();
+
+		if (aleteo && alas <= 1.2f) {
+			alas += offsetAlas * deltaTime;
+		}
+		else {
+			aleteo = false;
+			alas -= offsetAlas * deltaTime;
+			if (alas > 1.5) alas = 1.4;
+			if (alas < 0.8f) {
+				aleteo = true;
+			}
+		}
+				
+		//AlaI
+		model = modelaux;
+		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+		model = glm::translate(model, glm::vec3(-1.5f, 1.0f, -1.f));
+		model = glm::rotate(model, -1 + alas, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		SnitchAlaI.RenderModel();
+
+		//AlaD
+		model = modelaux;
+		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+		model = glm::translate(model, glm::vec3(1.5f, 1.0f, -1.f));
+		model = glm::rotate(model, -alas + 1, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		SnitchAlaD.RenderModel();
 		
 
-		//textura con movimiento
+
+		/* ------------------------- Textura con movimiento------------------------*/
 		//Importantes porque la variable uniform no podemos modificarla directamente
 		toffsetu += 0.001;
 		toffsetv += 0.001;
@@ -621,23 +807,17 @@ int main()
 		//printf("\ntfosset %f \n", toffsetu);
 		//pasar a la variable uniform el valor actualizado
 		toffset = glm::vec2(toffsetu, toffsetv);
-
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, 0.2f, -6.0f));
 		model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		
 		FlechaTexture.UseTexture();
 		//Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[4]->RenderMesh();
 		glDisable(GL_BLEND);
 		
-		
-
-
-
 		glUseProgram(0);
 
 		mainWindow.swapBuffers();
