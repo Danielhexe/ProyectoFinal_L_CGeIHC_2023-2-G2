@@ -17,7 +17,13 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	tirar = false;
 	numRandom = false;
 	avanzar_Tobi = 0.0f;
+	desplazar_tobi = 0.0f;
 	mover_extremidades = 0.0f;
+	desplazar_extremidades = 0.0f;
+	rotar_cabeza = 0.0f;
+	arriba_cabeza = 0.0f;
+	rotar_tobi = 0.0f;
+	camara = 1;
 	for (size_t i = 0; i < 1024; i++)
 	{
 		keys[i] = 0;
@@ -143,16 +149,82 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	}
 	if (key == GLFW_KEY_UP) {
 		theWindow->avanzar_Tobi += 0.1;
-		if (theWindow->mover_extremidades<=41.0f && mover == true)
-			theWindow->mover_extremidades += 1.0f;
-		if (theWindow->mover_extremidades >= 40.0f && mover == true)
-			mover = false;
-		if (theWindow->mover_extremidades >= -41.0f && mover == false)
-			theWindow->mover_extremidades -= 1.0f;
-		if (theWindow->mover_extremidades <= -41.0f && mover == false)
-			mover = true;
-		printf("pierna: %f\tmover: %d\n", theWindow->mover_extremidades, mover);
+		if (theWindow->mover == true) {
+			if (theWindow->mover_extremidades < 40.0f)
+				theWindow->mover_extremidades += 1.0f;
+			else
+				theWindow->mover = false;
+		}
+		if (theWindow->mover == false) {
+			if (theWindow->mover_extremidades > -40.0f)
+				theWindow->mover_extremidades -= 1.0f;
+			else
+				theWindow->mover = true;
+		}
 	}
+	if (key == GLFW_KEY_DOWN) {
+		theWindow->avanzar_Tobi -= 0.1;
+		if (theWindow->mover == true) {
+			if (theWindow->mover_extremidades > -40.0f)
+				theWindow->mover_extremidades -= 1.0f;
+			else
+				theWindow->mover = false;
+		}
+		if (theWindow->mover == false) {
+			if (theWindow->mover_extremidades < +40.0f)
+				theWindow->mover_extremidades += 1.0f;
+			else
+				theWindow->mover = true;
+		}
+	}
+	if (key == GLFW_KEY_RIGHT) {
+		theWindow->desplazar_tobi += 0.1;
+		if (theWindow->mover_lado == true) {
+			if (theWindow->desplazar_extremidades < 40.0f)
+				theWindow->desplazar_extremidades += 1.0f;
+			else
+				theWindow->mover_lado = false;
+		}
+		if (theWindow->mover_lado == false) {
+			if (theWindow->desplazar_extremidades > -40.0f)
+				theWindow->desplazar_extremidades -= 1.0f;
+			else
+				theWindow->mover_lado = true;
+		}
+	}
+	if (key == GLFW_KEY_LEFT) {
+		theWindow->desplazar_tobi -= 0.1;
+		if (theWindow->mover_lado == true) {
+			if (theWindow->desplazar_extremidades > -40.0f)
+				theWindow->desplazar_extremidades -= 1.0f;
+			else
+				theWindow->mover_lado = false;
+		}
+		if (theWindow->mover_lado == false) {
+			if (theWindow->desplazar_extremidades < 40.0f)
+				theWindow->desplazar_extremidades += 1.0f;
+			else
+				theWindow->mover_lado = true;
+		}
+	}
+	if (key == GLFW_KEY_F1)
+		theWindow->rotar_tobi += 1.0f;
+	if (key == GLFW_KEY_F2)
+		theWindow->rotar_tobi -= 1.0f;
+	if (key == GLFW_KEY_F3)
+		theWindow->arriba_cabeza += 1.0f;
+	if (key == GLFW_KEY_F4)
+		theWindow->arriba_cabeza -= 1.0f;
+	if (key == GLFW_KEY_F5)
+		theWindow->rotar_cabeza += 1.0f;
+	if (key == GLFW_KEY_F6)
+		theWindow->rotar_cabeza -= 1.0f;
+	if (key == GLFW_KEY_Z)
+		theWindow->camara = 1;
+	if (key == GLFW_KEY_X)
+		theWindow->camara = 2;
+	if (key == GLFW_KEY_C)
+		theWindow->camara = 3;
 }
 
 void Window::ManejaMouse(GLFWwindow* window, double xPos, double yPos)

@@ -24,6 +24,13 @@ public:
 	bool ResetT() { return reset; }
 	GLfloat avanzar_tobi() { return avanzar_Tobi; }
 	GLfloat Mover_pierna_brazo() { return mover_extremidades; }
+	GLfloat retroceder_tobi() { return avanzar_Tobi; }
+	GLfloat derecha_tobi() { return desplazar_tobi; }
+	GLfloat deLado_Tobi() { return desplazar_extremidades; }
+	GLfloat ARRIBA_cabeza() { return arriba_cabeza; }
+	GLfloat Rotar_Tobi() { return rotar_tobi; }
+	GLfloat Rotar_Cabeza() { return rotar_cabeza; }
+	GLfloat tipoCamara() { return camara; }
 	
 	~Window();
 private: 
@@ -37,9 +44,13 @@ private:
 	GLfloat xChange;
 	GLfloat yChange;
 	GLfloat muevex;
-	GLfloat avanzar_Tobi;
-	GLfloat mover_extremidades;
+	GLfloat avanzar_Tobi, desplazar_tobi;
+	GLfloat mover_extremidades, desplazar_extremidades;
+	GLfloat arriba_cabeza, rotar_tobi, rotar_cabeza;
+	int camara;
+
 	bool tirar;
+	bool mover = true, mover_lado = true;
 	bool numRandom;
 	bool reset;
 	bool mouseFirstMoved;

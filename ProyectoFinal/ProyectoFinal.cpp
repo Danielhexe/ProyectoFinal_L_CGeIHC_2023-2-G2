@@ -886,7 +886,10 @@ int main()
 		//Torso
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, 4.0f, 200.0f + mainWindow.avanzar_tobi()));
+		model = glm::translate(model, glm::vec3(mainWindow.derecha_tobi(), 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, mainWindow.retroceder_tobi()));
 		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		model = glm::rotate(model, mainWindow.Rotar_Tobi() * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		modelaux = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Torso_Tobi.RenderModel();
@@ -895,24 +898,31 @@ int main()
 		model = modelaux;
 		model = glm::translate(model, glm::vec3(3.0f, -1.5f, 0.0f));
 		model = glm::rotate(model, mainWindow.Mover_pierna_brazo() * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, mainWindow.deLado_Tobi() * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Pierna_DER.RenderModel();
 
 		//Pierna Izquierda
 		model = modelaux;
 		model = glm::translate(model, glm::vec3(-3.0f, -1.5f, 0.0f));
+		model = glm::rotate(model, -mainWindow.Mover_pierna_brazo() * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, -mainWindow.deLado_Tobi() * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Pierna_IZQ.RenderModel();
 
 		//Brazo Izquierdo
 		model = modelaux;
 		model = glm::translate(model, glm::vec3(13.05f, 11.5f, 0.0f));
+		model = glm::rotate(model, -mainWindow.Mover_pierna_brazo() * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, -mainWindow.deLado_Tobi() * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Brazo_Izq.RenderModel();
 
 		//Brazo Derecho
 		model = modelaux;
 		model = glm::translate(model, glm::vec3(-13.05f, 11.5f, 0.0f));
+		model = glm::rotate(model, mainWindow.Mover_pierna_brazo() * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, mainWindow.deLado_Tobi() * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Brazo_DER.RenderModel();
 
