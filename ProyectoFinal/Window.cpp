@@ -16,6 +16,8 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	muevex = 2.0f;
 	tirar = false;
 	numRandom = false;
+	avanzar_Tobi = 0.0f;
+	mover_extremidades = 0.0f;
 	for (size_t i = 0; i < 1024; i++)
 	{
 		keys[i] = 0;
@@ -100,6 +102,8 @@ GLfloat Window::getYChange()
 
 void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, int mode)
 {
+	bool mover = true;
+
 	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -136,6 +140,18 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 			theWindow->keys[key] = false;
 			//printf("se solto la tecla %d'\n", key);
 		}
+	}
+	if (key == GLFW_KEY_UP) {
+		theWindow->avanzar_Tobi += 0.1;
+		if (theWindow->mover_extremidades<=41.0f && mover == true)
+			theWindow->mover_extremidades += 1.0f;
+		if (theWindow->mover_extremidades >= 40.0f && mover == true)
+			mover = false;
+		if (theWindow->mover_extremidades >= -41.0f && mover == false)
+			theWindow->mover_extremidades -= 1.0f;
+		if (theWindow->mover_extremidades <= -41.0f && mover == false)
+			mover = true;
+		printf("pierna: %f\tmover: %d\n", theWindow->mover_extremidades, mover);
 	}
 }
 

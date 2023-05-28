@@ -22,6 +22,8 @@ public:
 	bool TiradaDado() { return tirar; }
 	bool RandNum() { return numRandom; }
 	bool ResetT() { return reset; }
+	GLfloat avanzar_tobi() { return avanzar_Tobi; }
+	GLfloat Mover_pierna_brazo() { return mover_extremidades; }
 	
 	~Window();
 private: 
@@ -35,6 +37,8 @@ private:
 	GLfloat xChange;
 	GLfloat yChange;
 	GLfloat muevex;
+	GLfloat avanzar_Tobi;
+	GLfloat mover_extremidades;
 	bool tirar;
 	bool numRandom;
 	bool reset;
