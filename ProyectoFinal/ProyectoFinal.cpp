@@ -89,6 +89,10 @@ Model Katana;
 Model GargantuaC;
 Model GargantuaA;
 
+
+//TOBI
+Model Torso_Tobi, Pierna_DER, Pierna_IZQ, Brazo_DER, Brazo_Izq, Cabeza;
+
 //Snithc
 Model Snitch;
 Model SnitchAlaI;
@@ -373,6 +377,18 @@ int main()
 	GargantuaC.LoadModel("Models/gargantuaCentro.obj");
 	GargantuaA = Model();
 	GargantuaA.LoadModel("Models/gargantuaCom.obj");
+	Torso_Tobi = Model();
+	Torso_Tobi.LoadModel("Models/Torso.obj");
+	Pierna_DER = Model();
+	Pierna_DER.LoadModel("Models/Pierna_DER.obj");
+	Pierna_IZQ = Model();
+	Pierna_IZQ.LoadModel("Models/Pierna_IZQ.obj");
+	Brazo_DER = Model();
+	Brazo_DER.LoadModel("Models/Brazo_Der.obj");
+	Brazo_Izq = Model();
+	Brazo_Izq.LoadModel("Models/Brazo_Izq.obj");
+	Cabeza = Model();
+	Cabeza.LoadModel("Models/Cabeza.obj");
 
 	//Snitch jerarquía
 	Snitch = Model();
@@ -698,9 +714,9 @@ int main()
 			xg -= 0.2;
 			zg += 0.32;
 		}
-		if (gC <= 300.0f) {
-			gC+=0.2f;
-		}
+		/*if (gC <= 300.0f) {
+			gC+=0.02f;
+		}*/
 		if (angulo < 360) angulo += 1.f;
 		else angulo = 0.0f;
 		model = glm::mat4(1.0);				//x	= 300f;		z=-500.0f;
@@ -829,9 +845,38 @@ int main()
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		SnitchAlaD.RenderModel();
 
+		/*-------------------------------- TOBI ----------------------------*/
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 4.0f, 200.0f));
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		modelaux = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Torso_Tobi.RenderModel();
 
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(3.0f, -1.5f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Pierna_DER.RenderModel();
 
-		
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(-3.0f, -1.5f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Pierna_IZQ.RenderModel();
+
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(13.05f, 11.5f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Brazo_Izq.RenderModel();
+
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(-13.05f, 11.5f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Brazo_DER.RenderModel();
+
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(0.0f, 40.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Cabeza.RenderModel();
 
 
 		/* ------------------------- Textura con movimiento------------------------*/
