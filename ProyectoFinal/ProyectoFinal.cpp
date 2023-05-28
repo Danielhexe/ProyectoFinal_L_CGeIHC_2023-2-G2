@@ -38,8 +38,19 @@ float toffsetv = 0.0f;
 float reproduciranimacion, habilitaranimacion,
 guardoFrame, reinicioFrame, ciclo, ciclo2, contador = 0;
 
+
+
 //Animación básica
+float offsetSnitch;
 float vueloSnitch;
+float rotateSnitch;
+bool inicioV;
+bool rotFlag;
+bool frente;
+
+float offsetAlas;
+float alas;
+bool aleteo;
 
 Window mainWindow;
 std::vector<Mesh*> meshList;
@@ -460,6 +471,18 @@ int main()
 	sp.load();//enviar la esfera al shader
 
 	
+	/* Se declaran las variables */
+	offsetSnitch = 0.3f;
+	offsetAlas = 0.1;
+	vueloSnitch =0.0f;
+	rotateSnitch = 0.0f;
+	alas = 0.0f;
+	aleteo = true;
+	inicioV = true;
+	frente = true;
+	rotFlag = false;
+
+
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
 	{
@@ -489,7 +512,7 @@ int main()
 			}
 			horario += 0.01f;
 		}
-		printf("Horario -> %f\n",horario);
+		//printf("Horario -> %f\n",horario);
 				
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();
@@ -713,27 +736,59 @@ int main()
 		Naruto.RenderModel();
 
 		/*------------------------ Snitch --------------------------*/
+		if (vueloSnitch < 70.0f && frente) {		//Esto representa la distancia que debe recorrer
+			vueloSnitch += offsetSnitch * deltaTime;	//Para ajustar nuestro ciclo de reloj y se vea bien
+			if (rotateSnitch >= 0.0f && rotFlag) {
+				rotateSnitch -= 0.05;	//Para hacer que vuelva a su estado de ver hacia adelante
+			}
+		}else{
+			vueloSnitch -= offsetSnitch * deltaTime;
+			frente = false;
+			if (vueloSnitch < -30.5f) { frente = true; }
+			if (rotateSnitch <= (180.0*toRadians)) {
+				rotateSnitch += 0.05;
+			}
+			else { rotFlag = true; }		//Si no tenemos una bandera auxiliar cuando recién inicie el programa va a hacer el (rotateSnitch >= 0.0f && rotFlag)
+		}
+
+		if (vueloSnitch > 1.0f && inicioV) {	//inicioV bandera para ajustar la posición  a 0.5 y de ahí arrancar sino vueloSnitch en el incio es > 40 y se desaparece xd
+			vueloSnitch = 0.5;
+			inicioV = false;
+		}
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(8*sin(vueloSnitch/4),50 + (2.5*sin(vueloSnitch)), vueloSnitch));
+		model = glm::rotate(model, rotateSnitch, glm::vec3(0.0f, 1.0f, 0.0f));
 		modelaux = model;	//Para hacer jerarquía
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(2.5f, 2.0f, 2.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Snitch.RenderModel();
 
+		if (aleteo && alas <= 1.2f) {
+			alas += offsetAlas * deltaTime;
+		}
+		else {
+			aleteo = false;
+			alas -= offsetAlas * deltaTime;
+			if (alas > 1.5) alas = 1.4;
+			if (alas < 0.8f) {
+				aleteo = true;
+			}
+		}
+				
 		//AlaI
 		model = modelaux;
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-		model = glm::translate(model, glm::vec3(-2.0f, 1.2f, 0.0f));
-		//model = glm::rotate(model, vueloSnitch, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+		model = glm::translate(model, glm::vec3(-1.5f, 1.0f, -1.f));
+		model = glm::rotate(model, -1 + alas, glm::vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		SnitchAlaI.RenderModel();
 
 		//AlaD
 		model = modelaux;
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-		model = glm::translate(model, glm::vec3(2.0f, 1.2f, 0.0f));
-		//model = glm::rotate(model, -vueloSnitch, glm::vec3(0.0f, 1.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+		model = glm::translate(model, glm::vec3(1.5f, 1.0f, -1.f));
+		model = glm::rotate(model, -alas + 1, glm::vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		SnitchAlaD.RenderModel();
