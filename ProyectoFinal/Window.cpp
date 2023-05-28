@@ -211,14 +211,22 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		theWindow->rotar_tobi += 1.0f;
 	if (key == GLFW_KEY_F2)
 		theWindow->rotar_tobi -= 1.0f;
-	if (key == GLFW_KEY_F3)
-		theWindow->arriba_cabeza += 1.0f;
-	if (key == GLFW_KEY_F4)
-		theWindow->arriba_cabeza -= 1.0f;
-	if (key == GLFW_KEY_F5)
-		theWindow->rotar_cabeza += 1.0f;
-	if (key == GLFW_KEY_F6)
-		theWindow->rotar_cabeza -= 1.0f;
+	if (key == GLFW_KEY_F3) {
+		if (theWindow->arriba_cabeza <= 45.0f)
+			theWindow->arriba_cabeza += 1.0f;
+	}
+	if (key == GLFW_KEY_F4) {
+		if (theWindow->arriba_cabeza >= -45.0f)
+			theWindow->arriba_cabeza -= 1.0f;
+	}
+	if (key == GLFW_KEY_F5) {
+		if (theWindow->rotar_cabeza <= 90.0f)
+			theWindow->rotar_cabeza += 1.0f;
+	}
+	if (key == GLFW_KEY_F6) {
+		if (theWindow->rotar_cabeza >= -90.0f)
+			theWindow->rotar_cabeza -= 1.0f;
+	}
 	if (key == GLFW_KEY_Z)
 		theWindow->camara = 1;
 	if (key == GLFW_KEY_X)

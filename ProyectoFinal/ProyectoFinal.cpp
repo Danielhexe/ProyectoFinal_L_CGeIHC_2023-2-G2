@@ -977,6 +977,8 @@ int main()
 			//Cabeza
 			model = modelaux;
 			model = glm::translate(model, glm::vec3(0.0f, 40.0f, 0.0f));
+			model = glm::rotate(model, mainWindow.ARRIBA_cabeza() * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, mainWindow.Rotar_Cabeza() * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Cabeza.RenderModel();
 
@@ -1279,6 +1281,8 @@ int main()
 			//Cabeza
 			model = modelaux;
 			model = glm::translate(model, glm::vec3(0.0f, 40.0f, 0.0f));
+			model = glm::rotate(model, mainWindow.ARRIBA_cabeza() * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, mainWindow.Rotar_Cabeza() * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			if ((x10 + mainWindow.derecha_tobi()) >= 0.0f && (z10 + 200.0f + mainWindow.avanzar_tobi()) >= 0.0f && y9 <= 4.0f)
 				Cabeza.RenderModel();
