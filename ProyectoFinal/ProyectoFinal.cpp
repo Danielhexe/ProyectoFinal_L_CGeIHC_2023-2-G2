@@ -512,8 +512,17 @@ int main()
 		35.0f);
 	spotLightCount++;
 
-	//linterna
-	spotLights[1] = SpotLight(1.0f, 1.0f, 1.0f,
+	//Rayo de la muerte
+	spotLights[1] = SpotLight(0.051, 1, 0.4118,
+		1.0f, 2.0f,
+		-280.0f, 230.0f, -450.0f,
+		1.f, -1.0f, 1.0f,
+		1.0f, 0.0f, 0.0f,
+		15.0f);
+	spotLightCount++;
+
+
+	spotLights[2] = SpotLight(1.0f, 1.0f, 1.0f,
 		0.0f, 2.0f,
 		0.0f, 0.0f, 0.0f,
 		0.0f, -1.0f, 0.0f,
@@ -644,7 +653,7 @@ int main()
 		// luz ligada a la cámara de tipo flash
 		glm::vec3 lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
-		spotLights[1].SetFlash(lowerLight, camera.getCameraDirection());
+		spotLights[2].SetFlash(lowerLight, camera.getCameraDirection());
 
 		//información al shader de fuentes de iluminación
 
