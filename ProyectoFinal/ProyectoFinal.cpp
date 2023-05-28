@@ -59,13 +59,16 @@ bool inicioBiju;
 float offsetBijumov;
 float creceBiju;
 float lanzaBiju;
-
 /* --------------- Animación gargantua -----------------*/
 float crece;
 float angulo;
 float xg;
 float zg;
 float gC;
+
+
+/*    Ilumicanción   */
+bool fueraLuces;
 
 
 Window mainWindow;
@@ -123,7 +126,9 @@ GLfloat lastTime = 0.0f;
 static double limitFPS = 1.0 / 60.0;
 
 // luz direccional
-DirectionalLight mainLight;
+DirectionalLight mainLightNoche;
+DirectionalLight mainLightDia;
+
 //para declarar varias luces de tipo pointlight
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
@@ -462,30 +467,44 @@ int main()
 	Material_opaco = Material(0.3f, 4);
 
 	//luz direccional, sólo 1 y siempre debe de existir
-	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-		0.3f, 0.3f,
+	mainLightNoche = DirectionalLight(1.0f, 1.0f, 1.0f,
+		0.1f, 0.1f,
 		0.0f, 0.0f, -1.0f);
+	
+	mainLightDia = DirectionalLight(1.0f, 1.0f, 1.0f,
+		0.8f, 0.8f,
+		0.0f, 0.0f, -1.0f);
+
+
+
 	//contador de luces puntuales
 	unsigned int pointLightCount = 0;
-	//Declaración de primer luz puntual
+	//Luces del restaurante
 	pointLights[0] = PointLight(1.0f, 0.9647f, 0.3373f,
-		0.0f, 5.0f,
-		0.0f, 5.f, 1.5f,
-		0.3f, 0.2f, 0.1f);
+		0.0f, 30.0f,
+		130.0f, 60.f, 120.f,
+		0.007f, 0.007f, 0.006f);
 	pointLightCount++;
 
-	unsigned int spotLightCount = 0;
-	//linterna
-	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
-		0.0f, 2.0f,
-		0.0f, 0.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		15.0f);
-	spotLightCount++;
+	pointLights[1] = PointLight(1.0f, 0.9647f, 0.3373f,
+		0.0f, 30.0f,
+		130.0f, 60.f, 290.f,
+		0.007f, 0.007f, 0.006f); //0.001f, 0.004f, 0.005
+	pointLightCount++;
 
-	//luz fija
-	spotLights[1] = SpotLight(0.4784, 0.0588, 0.8196,
+	//Luz naranja
+	pointLights[2] = PointLight(1.0f, 0.3176, 0.0196,
+		0.0f, 30.0f,
+		80.0f, 70.f, 80.f,
+		0.001f, 0.004f, 0.005f);
+	pointLightCount++;
+
+
+	/* Spotlighs*/
+	unsigned int spotLightCount = 0;
+	
+	//Bijudama
+	spotLights[0] = SpotLight(0.4784, 0.0588, 0.8196,
 		1.0f, 2.0f,
 		5.0f, 20.0f, 0.0f,
 		0.0f, -5.0f, 0.0f,
@@ -493,6 +512,14 @@ int main()
 		35.0f);
 	spotLightCount++;
 
+	//linterna
+	spotLights[1] = SpotLight(1.0f, 1.0f, 1.0f,
+		0.0f, 2.0f,
+		0.0f, 0.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
+		1.0f, 0.0f, 0.0f,
+		15.0f);
+	spotLightCount++;
 
 	//Verificacion
 
@@ -560,7 +587,9 @@ int main()
 	zg = -500.0f;
 	gC = 0.0f;
 
-	
+
+	/* Luces */
+	//fueraLuces = false;
 
 
 	////Loop mientras no se cierra la ventana
@@ -584,13 +613,15 @@ int main()
 		if (horario <= 7.0f) {			//Se ve la noche
 			skyboxNoche.DrawSkybox(camera.calculateViewMatrix(), projection);			//Se dibuja el cielo
 			horario += 0.01f;
+			fueraLuces = false;
 		}
 		else {
 			skyboxDia.DrawSkybox(camera.calculateViewMatrix(), projection);
-			if (horario > 7.0f && horario > 14.5f) {
+			if (horario > 14.f) {
 				horario = 0.0f;
 			}
 			horario += 0.01f;
+			fueraLuces = true;
 		}
 		//printf("Horario -> %f\n",horario);
 				
@@ -613,12 +644,26 @@ int main()
 		// luz ligada a la cámara de tipo flash
 		glm::vec3 lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
-		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
+		spotLights[1].SetFlash(lowerLight, camera.getCameraDirection());
 
 		//información al shader de fuentes de iluminación
-		shaderList[0].SetDirectionalLight(&mainLight);
-		shaderList[0].SetPointLights(pointLights, pointLightCount);
-		shaderList[0].SetSpotLights(spotLights, spotLightCount);
+
+		//
+		//shaderList[0].SetDirectionalLight(&mainLightDia);
+		
+		if (fueraLuces) {
+			shaderList[0].SetPointLights(pointLights, pointLightCount - 3);
+			shaderList[0].SetDirectionalLight(&mainLightDia);
+			shaderList[0].SetSpotLights(spotLights, spotLightCount-1);
+		}
+		else {
+			shaderList[0].SetPointLights(pointLights, pointLightCount);
+			shaderList[0].SetDirectionalLight(&mainLightNoche);
+			shaderList[0].SetSpotLights(spotLights, spotLightCount);
+		}
+		
+		//Las spotlights
+		//shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
 
 		/* Se declaran algunas matrices auxiliares*/
@@ -677,7 +722,7 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		GargantuaA.RenderModel();
-		printf("Crecimiento Gargantua: %f\n", gC);
+		//printf("Crecimiento Gargantua: %f\n", gC);
 
 		if (xg >= 0.0f) {
 
@@ -1037,28 +1082,17 @@ int main()
 				creceBiju += 0.01;
 			}
 
-			printf("crece -> %f | lanza -> %f\n", creceBiju, lanzaBiju);
+			//printf("crece -> %f | lanza -> %f\n", creceBiju, lanzaBiju);
 
 			model = modelBiju;
 			model = glm::translate(model, glm::vec3(10.0f + lanzaBiju, 7.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(creceBiju, creceBiju, creceBiju));
 					glm::vec3 muevePoint = glm::vec3(-35, 60.0f, movBiju - 200.f + 70.0f + (4.5 * lanzaBiju));
-					spotLights[1].SetPos(muevePoint);
+					spotLights[0].SetPos(muevePoint);
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			bijudama.RenderModel();
 		}
 		else {
-			/*-----------------Esfera simula la bijudama ------------*/  //Bibudama de fuego
-			//color = glm::vec3(0.1961f, 0.8902f, 0.8196f);
-			/*
-			model = glm::translate(model, glm::vec3(0.4f, 25.0f, -6.0f));
-			model = glm::scale(model, glm::vec3(5.0f, 5.0f,5.0f));
-			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-			glUniformMatrix4fv(uniformTextureOffset, 1, GL_FALSE, glm::value_ptr(toffset));
-			LavaT.UseTexture();
-			sp.render();
-			*/
 
 			/* --------------------------- Restaurante ----------------------------*/
 			model = glm::mat4(1.0);				//:vec3(-22.0f, 28.0f, 15.0f)
@@ -1282,7 +1316,7 @@ int main()
 				creceBiju += 0.01;
 			}
 
-			printf("crece -> %f | lanza -> %f\n", creceBiju, lanzaBiju);
+			//printf("crece -> %f | lanza -> %f\n", creceBiju, lanzaBiju);
 
 			model = modelBiju;
 			model = glm::translate(model, glm::vec3(10.0f + lanzaBiju - x12, 7.0f - y12, 0.0f));
