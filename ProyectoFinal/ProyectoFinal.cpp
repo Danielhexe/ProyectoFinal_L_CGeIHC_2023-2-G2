@@ -40,17 +40,23 @@ guardoFrame, reinicioFrame, ciclo, ciclo2, contador = 0;
 
 
 
-//Animación básica
+/*   Animacion básica ----------------- Snitch--------------*/
 float offsetSnitch;
 float vueloSnitch;
 float rotateSnitch;
 bool inicioV;
 bool rotFlag;
 bool frente;
-
 float offsetAlas;
 float alas;
 bool aleteo;
+
+/* --------------- Animación gargantua -----------------*/
+float crece;
+float angulo;
+float xg;
+float zg;
+
 
 Window mainWindow;
 std::vector<Mesh*> meshList;
@@ -79,7 +85,8 @@ Model Naruto;
 Model TrebolC;
 Model Mesa;
 Model Katana;
-Model Gargantua;
+Model GargantuaC;
+Model GargantuaA;
 
 //Snithc
 Model Snitch;
@@ -361,9 +368,11 @@ int main()
 	Mesa.LoadModel("Models/MESA.obj");
 	Katana = Model();
 	Katana.LoadModel("Models/KAtana.obj");
-	Gargantua = Model();
-	Gargantua.LoadModel("Models/gargantua.obj");
-	
+	GargantuaC = Model();
+	GargantuaC.LoadModel("Models/gargantuaCentro.obj");
+	GargantuaA = Model();
+	GargantuaA.LoadModel("Models/gargantuaCom.obj");
+
 	//Snitch jerarquía
 	Snitch = Model();
 	Snitch.LoadModel("Models/snitchOBJ.obj"); //El centro de la snitch
@@ -371,7 +380,7 @@ int main()
 	SnitchAlaI.LoadModel("Models/snitchAlaI.obj"); //El centro de la snitch
 	SnitchAlaD = Model();
 	SnitchAlaD.LoadModel("Models/snitchAlaD.obj"); //El centro de la snitch
-	
+
 
 	/* Variable a utilizar */
 	horario = 0.0f;
@@ -380,7 +389,7 @@ int main()
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_RT.tga");			//Right
 	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_LT.tga");			//Left
- 	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_DT.tga");			//Down
+	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_DT.tga");			//Down
 	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_UT.tga");			//Up
 	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_BT.tga");			//Back				//CA	
 	skyboxFaces.push_back("Textures/Skybox/Noche/Aldea_FT.tga");			//Front	256x256		
@@ -435,10 +444,10 @@ int main()
 	//Verificacion
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
-		uniformSpecularIntensity = 0, uniformShininess = 0, uniformTextureOffset=0;
+		uniformSpecularIntensity = 0, uniformShininess = 0, uniformTextureOffset = 0;
 	GLuint uniformColor = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
-	
+
 	glm::vec3 posblackhawk = glm::vec3(2.0f, 0.0f, 0.0f);
 	//KEYFRAMES DECLARADOS INICIALES
 	KeyFrame[0].movAvion_x = 0.0f;
@@ -470,17 +479,24 @@ int main()
 	sp.init(); //inicializar esfera
 	sp.load();//enviar la esfera al shader
 
-	
-	/* Se declaran las variables */
+
+	/*-----------------   Se declaran las variables snitch------------- */
 	offsetSnitch = 0.3f;
 	offsetAlas = 0.1;
-	vueloSnitch =0.0f;
+	vueloSnitch = 0.0f;
 	rotateSnitch = 0.0f;
 	alas = 0.0f;
 	aleteo = true;
 	inicioV = true;
 	frente = true;
 	rotFlag = false;
+	/* ------------------------------Gargantua----------------------------------------------*/
+	crece = 0.0f;
+	angulo = 0.0f;
+	xg = 300.f;
+	zg = -500.0f;
+
+	
 
 
 	////Loop mientras no se cierra la ventana
@@ -676,12 +692,27 @@ int main()
 		DeathStar.RenderModel();
 
 		/*------------------ Gargantua ------------------------------*/
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(250.0f, 100.0f, -500.0f));
-		model = glm::scale(model, glm::vec3(15.0f, 15.0f, 15.0f));
-		model = glm::rotate(model, -150 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		if (xg >= 0.0f) {
+			xg -= 0.2;
+			zg += 0.32;
+		}
+		if (angulo < 360) angulo += 1.f;
+		else angulo = 0.0f;
+		model = glm::mat4(1.0);				//x	= 300f;		z=-500.0f;
+		model = glm::translate(model, glm::vec3(xg, 50.0f, zg));
+		model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+		model = glm::rotate(model, angulo * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		modelaux = model;
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Gargantua.RenderModel();
+		GargantuaC.RenderModel();
+
+		model = modelaux;
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, -1 + alas, glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		GargantuaA.RenderModel();
 
 		/*--------------------- KUNAI ---------------------------------*/
 		model = glm::mat4(1.0);
